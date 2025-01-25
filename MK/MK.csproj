@@ -77,9 +77,6 @@
 	  <Folder Include="Views/" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<EmbeddedResource Include="appsettings.json" />
-	</ItemGroup>
 
 			
 	

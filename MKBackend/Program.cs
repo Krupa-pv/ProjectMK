@@ -17,14 +17,12 @@ builder.Logging.AddConsole();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var config = builder.Configuration.GetSection("CosmosDB");
-
-
-string connectionString = config["ConnectionString"] ?? throw new InvalidOperationException("ConnectionString is not configured.");
+string connectionString = builder.Configuration["ConnectionString"];
 Console.WriteLine($"Cosmos DB Connection String: {connectionString}");
 
-string databaseName = config["DatabaseName"] ?? throw new InvalidOperationException("DatabaseName is not configured.");
-string containerName = config["ContainerName"] ?? throw new InvalidOperationException("ContainerName is not configured.");
+string databaseName = builder.Configuration["DatabaseName"];
+string containerName = builder.Configuration["ContainerName"];
+
 
 // Add Cosmos DB service
 //registering cosmos with DI container
@@ -40,16 +38,16 @@ builder.Services.AddSingleton<CosmosDBService>(sp =>
     var cosmosClient = sp.GetRequiredService<CosmosClient>();
     return new CosmosDBService(cosmosClient, databaseName, containerName);
 });
-//builder.Services.AddSingleton(sp => new CosmosDBService(connectionString, databaseName, containerName));
 
 //add open ai service with DI container
 
-//UNCOMMENT THIS
 
-/*builder.Services.AddSingleton(new OpenAIClient(
-    new Uri("ADD URL"),
-    new Azure.AzureKeyCredential("ADD KEY")
-));*/
+string openAIUrl = builder.Configuration["OpenAIURL"];
+string keyCred = builder.Configuration["OpenAIKeyCred"];
+builder.Services.AddSingleton(new OpenAIClient(
+    new Uri(openAIUrl),
+    new Azure.AzureKeyCredential(keyCred)
+));
 
 var app = builder.Build();
 

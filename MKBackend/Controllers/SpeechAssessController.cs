@@ -25,10 +25,9 @@ namespace MKBackend.Controllers
 
         public SpeechAssessController(IConfiguration configuration, CosmosClient cosmosClient)
         {
-            _container = cosmosClient.GetContainer(
-                configuration["CosmosDb:DatabaseName"],
-                configuration["CosmosDb:ContainerName"]
-            );
+            string databaseName = configuration["DatabaseName"];
+            string containerName = configuration["ContainerName"];
+            _container = cosmosClient.GetContainer(databaseName,containerName);
         }
 
         // Get pronunciation data for a user

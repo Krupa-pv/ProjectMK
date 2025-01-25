@@ -32,7 +32,7 @@ public static class MauiProgram
         builder.Services.AddSingleton<IAudioManager, AudioManager>();
         builder.Services.AddSingleton<ApiService>();
 
-        var assembly = Assembly.GetExecutingAssembly();
+        /*var assembly = Assembly.GetExecutingAssembly();
         using var stream = assembly.GetManifestResourceStream("MK.appsettings.json");
         if (stream == null) throw new Exception("Embedded resource not found!");
 
@@ -43,7 +43,7 @@ public static class MauiProgram
             .AddJsonStream(new MemoryStream(TextEncoding.UTF8.GetBytes(json)));
 
         var configuration = configBuilder.Build();
-
+        */
         // Platform-specific services
         #if MACCATALYST
         builder.Services.AddSingleton<ISpeechToText, SpeechToTextImplementation>();
