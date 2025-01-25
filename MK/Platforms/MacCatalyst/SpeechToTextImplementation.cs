@@ -6,14 +6,24 @@ using System.Diagnostics;
 using Microsoft.Maui.Controls;
 using Microsoft.CognitiveServices.Speech.PronunciationAssessment;
 using MK;
+using Microsoft.Extensions.Configuration;
 
 namespace MK.Platforms.MacCatalyst
 {
     public class SpeechToTextImplementation : ISpeechToText
     {
-        private string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR"; // Replace with your Azure Speech Key
-        private string _speechRegion = "eastus";       // Replace with your Azure Speech Region
 
+        private readonly IConfiguration Configuration;
+        private readonly string _speechKey;
+        private readonly string _speechRegion;
+
+        public SpeechToTextImplementation(IConfiguration configuration){
+            Configuration = configuration; 
+            var _speechKey = Configuration["SpeechService: Key"];
+            var _speechRegion = Configuration["SpeechService: Region"];
+            Debug.WriteLine($"speechkey: {_speechKey}");
+            Debug.WriteLine($"speechkey: {_speechRegion}");
+        } 
         public async Task<bool> RequestPermissions()
         {
             try
@@ -45,6 +55,7 @@ namespace MK.Platforms.MacCatalyst
                 throw new InvalidOperationException("Microphone permissions are required.");
             }
 
+            
             var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
             speechConfig.SpeechRecognitionLanguage = culture.Name;
 
@@ -143,9 +154,10 @@ namespace MK.Platforms.MacCatalyst
     CancellationToken cancellationToken)
 {
     Debug.WriteLine("Starting Pronunciation Assessment...");
-
+    string speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR";
+    string speechRegion = "eastus";
     // Configure speech settings
-    var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
+    var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
     speechConfig.SpeechRecognitionLanguage = culture.Name;
 
     // Configure pronunciation assessment

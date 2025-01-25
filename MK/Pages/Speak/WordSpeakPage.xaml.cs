@@ -61,7 +61,8 @@ public partial class WordSpeakPage : ContentPage
             Debug.WriteLine(generatedWords);
             if (!string.IsNullOrWhiteSpace(generatedWords))
             {
-                var cleanedWords = System.Text.RegularExpressions.Regex.Replace(generatedWords, @"\d+\.\s?", "");
+                var cleanedWords = System.Text.RegularExpressions.Regex.Replace(generatedWords, @"\d+\.\s?", "")
+                                                                        .Replace("-", "");
             Debug.WriteLine($"Cleaned Words: {cleanedWords}");
 
             // Split words from the cleaned response
@@ -142,8 +143,7 @@ public partial class WordSpeakPage : ContentPage
             Debug.WriteLine($"Assessment Result Details: AccuracyScore={assessmentResult.AccuracyScore}, FluencyScore={assessmentResult.FluencyScore}");
 
 
-            if (assessmentResult != null 
-            && assessmentResult.AccuracyScore >= 80 
+            if (assessmentResult.AccuracyScore >= 80 
             && assessmentResult.FluencyScore >= 80)
             {
                 wordRecognized = true;

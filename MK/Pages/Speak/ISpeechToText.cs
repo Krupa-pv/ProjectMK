@@ -7,6 +7,7 @@ namespace MK
     {
         Task<bool> RequestPermissions();
         Task<string> Listen(CultureInfo culture, IProgress<string> recognitionResult, CancellationToken cancellationToken);
+
         Task<PronunciationAssessmentResult> AssessPronunciation(
             CultureInfo culture,
             string referenceText,
@@ -17,5 +18,7 @@ namespace MK
             string referenceText,
             IProgress<string> recognitionResult,
             CancellationToken cancellationToken);
+
+        
     }
 }

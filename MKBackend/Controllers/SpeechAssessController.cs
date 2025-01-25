@@ -45,6 +45,7 @@ namespace MKBackend.Controllers
             catch (CosmosException ex)
             {
                 return NotFound(new { Error = ex.Message });
+                Console.WriteLine("Reached GetPronunciation Data Error");
             }
         }
         [HttpPut("{userId}/update")]
@@ -103,21 +104,7 @@ public async Task<IActionResult> SS_SaveFeedback(string userId, [FromBody] Pronu
         user.SpeechFeedback ??= new List<PronunciationFeedback>();
         user.SpeechFeedback.Add(feedback);
 
-        /*// Update trouble words
-        foreach (var troubleWord in feedback.TroubleWords)
-        {
-            var existingWord = user.MispronouncedWords.FirstOrDefault(w => w.Word == troubleWord.Word);
-            if (existingWord != null)
-            {
-                existingWord.Frequency += troubleWord.Frequency;
-                existingWord.LastEncountered = troubleWord.LastEncountered;
-            }
-            else
-            {
-                user.MispronouncedWords.Add(troubleWord);
-            }
-        }*/
-
+        
         // Save updated user data in Cosmos DB
         await _container.ReplaceItemAsync(user, userId, new PartitionKey(userId));
 

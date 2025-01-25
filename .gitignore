@@ -304,6 +304,7 @@ node_modules/
 # Visual Studio 6 technical files 
 *.ncb
 *.aps
+*/aot-output/**/*.s
 
 # Visual Studio LightSwitch build output
 **/*.HTMLClient/GeneratedArtifacts
