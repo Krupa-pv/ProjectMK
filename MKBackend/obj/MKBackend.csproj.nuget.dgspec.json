@@ -49,6 +49,10 @@
               "target": "Package",
               "version": "[1.0.0-beta.5, )"
             },
+            "Azure.AI.Vision.ImageAnalysis": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
             "Azure.Identity": {
               "target": "Package",
               "version": "[1.7.0, )"

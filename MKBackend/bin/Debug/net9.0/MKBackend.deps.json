@@ -9,6 +9,7 @@
       "MKBackend/1.0.0": {
         "dependencies": {
           "Azure.AI.OpenAI": "1.0.0-beta.5",
+          "Azure.AI.Vision.ImageAnalysis": "1.0.0",
           "Azure.Identity": "1.7.0",
           "Azure.Security.KeyVault.Secrets": "4.4.0",
           "Microsoft.AspNetCore.OpenApi": "9.0.0",
@@ -36,10 +37,23 @@
           }
         }
       },
+      "Azure.AI.Vision.ImageAnalysis/1.0.0": {
+        "dependencies": {
+          "Azure.Core": "1.44.1",
+          "System.ClientModel": "1.2.1",
+          "System.Text.Json": "6.0.10"
+        },
+        "runtime": {
+          "lib/netstandard2.0/Azure.AI.Vision.ImageAnalysis.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.24.52401"
+          }
+        }
+      },
       "Azure.Core/1.44.1": {
         "dependencies": {
           "Microsoft.Bcl.AsyncInterfaces": "6.0.0",
-          "System.ClientModel": "1.1.0",
+          "System.ClientModel": "1.2.1",
           "System.Diagnostics.DiagnosticSource": "8.0.1",
           "System.Memory.Data": "6.0.0",
           "System.Numerics.Vectors": "4.5.0",
@@ -811,15 +825,15 @@
         }
       },
       "System.Buffers/4.5.1": {},
-      "System.ClientModel/1.1.0": {
+      "System.ClientModel/1.2.1": {
         "dependencies": {
           "System.Memory.Data": "6.0.0",
           "System.Text.Json": "6.0.10"
         },
         "runtime": {
           "lib/net6.0/System.ClientModel.dll": {
-            "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.100.24.46703"
+            "assemblyVersion": "1.2.1.0",
+            "fileVersion": "1.200.124.50905"
           }
         }
       },
@@ -1296,6 +1310,13 @@
       "path": "azure.ai.openai/1.0.0-beta.5",
       "hashPath": "azure.ai.openai.1.0.0-beta.5.nupkg.sha512"
     },
+    "Azure.AI.Vision.ImageAnalysis/1.0.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ImGqg6uroJT0baxiRDq0mADC/xuv0k6i56i9pJG6adKMXKKc8HUbNNvYdvEnzn8GezmiKZXpt1G6+wPAopGJrw==",
+      "path": "azure.ai.vision.imageanalysis/1.0.0",
+      "hashPath": "azure.ai.vision.imageanalysis.1.0.0.nupkg.sha512"
+    },
     "Azure.Core/1.44.1": {
       "type": "package",
       "serviceable": true,
@@ -1646,12 +1667,12 @@
       "path": "system.buffers/4.5.1",
       "hashPath": "system.buffers.4.5.1.nupkg.sha512"
     },
-    "System.ClientModel/1.1.0": {
+    "System.ClientModel/1.2.1": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-UocOlCkxLZrG2CKMAAImPcldJTxeesHnHGHwhJ0pNlZEvEXcWKuQvVOER2/NiOkJGRJk978SNdw3j6/7O9H1lg==",
-      "path": "system.clientmodel/1.1.0",
-      "hashPath": "system.clientmodel.1.1.0.nupkg.sha512"
+      "sha512": "sha512-s9+M5El+DXdCRRLzxak8uGBKWT8H/eIssGpFtpaMKdJULrQbBDPH/zFbVyHX+NDczhS5EvjHFbBH9/L+0UhmcA==",
+      "path": "system.clientmodel/1.2.1",
+      "hashPath": "system.clientmodel.1.2.1.nupkg.sha512"
     },
     "System.Collections/4.3.0": {
       "type": "package",

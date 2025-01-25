@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "pTCHDgtA+Ws=",
+  "dgSpecHash": "PaVrVzT2dvQ=",
   "success": true,
   "projectFilePath": "/Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/MKBackend.csproj",
   "expectedPackageFiles": [
     "/Users/menakawijeratne/.nuget/packages/azure.ai.openai/1.0.0-beta.5/azure.ai.openai.1.0.0-beta.5.nupkg.sha512",
+    "/Users/menakawijeratne/.nuget/packages/azure.ai.vision.imageanalysis/1.0.0/azure.ai.vision.imageanalysis.1.0.0.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/azure.core/1.44.1/azure.core.1.44.1.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/azure.identity/1.7.0/azure.identity.1.7.0.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/azure.security.keyvault.secrets/4.4.0/azure.security.keyvault.secrets.4.4.0.nupkg.sha512",
@@ -55,7 +56,7 @@
     "/Users/menakawijeratne/.nuget/packages/swashbuckle.aspnetcore.swaggergen/7.2.0/swashbuckle.aspnetcore.swaggergen.7.2.0.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/swashbuckle.aspnetcore.swaggerui/7.2.0/swashbuckle.aspnetcore.swaggerui.7.2.0.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/system.buffers/4.5.1/system.buffers.4.5.1.nupkg.sha512",
-    "/Users/menakawijeratne/.nuget/packages/system.clientmodel/1.1.0/system.clientmodel.1.1.0.nupkg.sha512",
+    "/Users/menakawijeratne/.nuget/packages/system.clientmodel/1.2.1/system.clientmodel.1.2.1.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/system.collections/4.3.0/system.collections.4.3.0.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/system.collections.concurrent/4.3.0/system.collections.concurrent.4.3.0.nupkg.sha512",
     "/Users/menakawijeratne/.nuget/packages/system.collections.immutable/1.7.0/system.collections.immutable.1.7.0.nupkg.sha512",

@@ -54,6 +54,7 @@ public static class MauiProgram
         #if DEBUG
         builder.Logging.AddDebug();
         #endif
+        builder.Services.AddFilePicker();
 
         return builder.Build();
     }

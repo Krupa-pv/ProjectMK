@@ -6,6 +6,7 @@ using ModelsUser = MK.Models.User;
 using MK.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers; // For MediaTypeHeaderValue
+using LukeMauiFilePicker;
 
 
 
@@ -15,6 +16,14 @@ public class ApiService
 {
     private readonly HttpClient _httpClient;
     private readonly JsonSerializerOptions _serializerOptions;
+
+    static readonly Dictionary<DevicePlatform, IEnumerable<string>> FileType = new()
+    {
+        {  DevicePlatform.Android, new[] { "text/*" } } ,
+        { DevicePlatform.iOS, new[] { "public.json", "public.plain-text" } },
+        { DevicePlatform.MacCatalyst, new[] { "public.jpg", "public.png" } },
+        { DevicePlatform.WinUI, new[] { ".txt", ".json" } }
+    };
 
     public ApiService()
     {
@@ -273,6 +282,84 @@ public class ApiService
     }
 
 
+    public async Task<Image> uploadFileToBackend (IFilePickerService picker){
+        try
+        {   
+            Debug.WriteLine("this pmo");
+            var file = await picker.PickFileAsync("Select a file", FileType); 
+            if(file!=null){
+                Debug.WriteLine("file is indeed not null");
+                var fileStream = await file.OpenReadAsync();
+
+                var imageSource = ImageSource.FromStream(() => fileStream);
+
+                Image imageControl = new Image
+                {
+                    Source = imageSource,
+                    Aspect = Aspect.AspectFit // Set Aspect mode as needed (AspectFit, AspectFill, etc.)
+                };
+
+                //MyLayout.Children.Add(imageControl);
+
+                /*
+                Image image = new Image
+                {
+                    Source = ImageSource.FromStream(() => fileStream)
+                };
+                */
+
+
+                var fileExtension = Path.GetExtension(file.FileName).ToLower();
+                string contentType = "application/octet-stream"; // Default value
+
+                if (fileExtension == ".jpg" || fileExtension == ".jpeg")
+                {
+                    contentType = "image/jpeg";
+                }
+                else if (fileExtension == ".png")
+                {
+                    contentType = "image/png";
+                }
+                else if (fileExtension == ".gif")
+                {
+                    contentType = "image/gif";
+                }
+                else if (fileExtension == ".bmp")
+                {
+                    contentType = "image/bmp";
+                }
+                var content = new MultipartFormDataContent();
+                var streamContent = new StreamContent(fileStream);
+
+                streamContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+
+                // Step 5: Add the file to the content (file name must match the backend's parameter name)
+                content.Add(streamContent, "file", file.FileName);
+
+                // Step 6: Send the file to the backend via POST
+                var response = await _httpClient.PostAsync($"api/computervision/analyze", content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    Debug.WriteLine("File uploaded successfully!");
+                    return imageControl;
+                }
+                else
+                {
+                    Debug.WriteLine($"Failed to upload file. Status Code: {response.StatusCode}");
+                    return null;
+                }
+
+
+            }
+            return null;
+
+        }
+        catch(Exception ex){
+            return null;
+        }
+
+    }
 
 
 }

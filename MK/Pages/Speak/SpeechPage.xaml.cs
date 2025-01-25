@@ -11,6 +11,8 @@ using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.PronunciationAssessment;
 using System.Text.Json;
+using LukeMauiFilePicker;
+
 
 namespace MK;
 
@@ -20,6 +22,8 @@ public partial class SpeechPage : ContentPage
     private readonly ISpeechToText _speechToText;
     private CancellationTokenSource _cancellationTokenSource;
     private string _userId;
+
+
 
     public SpeechPage(ApiService apiService, ISpeechToText speechToText)
     {
@@ -168,6 +172,8 @@ private void OnStopRecordingClicked(object sender, EventArgs e)
 {
     _cancellationTokenSource?.Cancel();
 }
+
+
 
 
 

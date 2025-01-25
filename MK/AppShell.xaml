@@ -18,5 +18,9 @@
         <Tab Title="More" Icon="more_icon.png">
             <ShellContent Route="UserInput" ContentTemplate="{DataTemplate local:UserInput}" />
         </Tab>
+
+        <Tab Title="Test" Icon="more_icon.png">
+            <ShellContent Route="TestVision" ContentTemplate="{DataTemplate local:TestVision}" />
+        </Tab>
     </TabBar>
 </Shell>

@@ -311,3 +311,4 @@
 /Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/obj/Debug/net9.0/MKBackend.pdb
 /Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/obj/Debug/net9.0/MKBackend.genruntimeconfig.cache
 /Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/obj/Debug/net9.0/ref/MKBackend.dll
+/Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/bin/Debug/net9.0/Azure.AI.Vision.ImageAnalysis.dll
