@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MK.WordSpeakPage"
+             Title="Practice Words">
+
+    <StackLayout Padding="20" Spacing="15">
+
+        <!-- Difficulty Picker Section -->
+        <Frame Padding="10" CornerRadius="10" BorderColor="LightGray" BackgroundColor="#F8F8F8">
+            <StackLayout>
+                <Label Text="Select Difficulty:" 
+                       FontSize="18" 
+                       TextColor="Gray" 
+                       Margin="0,0,0,5" />
+                <Picker x:Name="DifficultyPicker" 
+                        FontSize="16" 
+                        BackgroundColor="White" 
+                        TextColor="Black">
+                    <Picker.ItemsSource>
+                        <x:Array Type="{x:Type x:String}">
+                            <x:String>Easy</x:String>
+                            <x:String>Medium</x:String>
+                            <x:String>Hard</x:String>
+                        </x:Array>
+                    </Picker.ItemsSource>
+                </Picker>
+            </StackLayout>
+        </Frame>
+
+        <!-- Word Display Section -->
+        <Frame Padding="10" CornerRadius="10" BorderColor="LightGray" BackgroundColor="#F8F8F8">
+            <Label x:Name="WordLabel" 
+                   Text="Press 'Generate Word' to start." 
+                   FontSize="24" 
+                   TextColor="Black" 
+                   HorizontalOptions="Center" />
+        </Frame>
+
+        <!-- Buttons Section -->
+        <Frame Padding="10" CornerRadius="10" BorderColor="LightGray" BackgroundColor="#F8F8F8">
+            <StackLayout Spacing="10">
+                <Button x:Name="GenerateWordButton" 
+                        Text="Generate Word" 
+                        Clicked ="OnGenerateWordClicked"
+                        BackgroundColor="#FF041A2D" 
+                        TextColor="White" 
+                        CornerRadius="10" 
+                        HeightRequest="50" />
+                <ActivityIndicator x:Name="LoadingIndicator"
+                           IsRunning="false"
+                           IsVisible="false"
+                           Color="Blue" 
+                           WidthRequest="50"
+                   HeightRequest="50"/>
+                
+                <Button x:Name="StartRecordingButton" 
+                        Text="Start Recording" 
+                        Clicked ="OnStartRecordingClicked"
+                        BackgroundColor="#FF1D517D" 
+                        TextColor="White" 
+                        CornerRadius="10" 
+                        HeightRequest="50" 
+                        IsEnabled="False" />
+                
+                
+                <Button x:Name="StopRecordingButton" 
+                        Text="Stop Recording" 
+                        Clicked ="OnStopRecordingClicked"
+                        BackgroundColor="#FF3A86C9" 
+                        TextColor="White" 
+                        CornerRadius="10" 
+                        HeightRequest="50" />
+                
+            </StackLayout>
+        </Frame>
+
+        <!-- Feedback Section -->
+        <Frame Padding="10" CornerRadius="10" BorderColor="LightGray" BackgroundColor="#F8F8F8">
+            <Label x:Name="FeedbackLabel" 
+                   Text="Feedback will appear here." 
+                   FontSize="16" 
+                   TextColor="Gray" 
+                   HorizontalOptions="Center" />
+        </Frame>
+
+    </StackLayout>
+</ContentPage>

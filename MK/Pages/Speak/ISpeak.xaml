@@ -1,0 +1,38 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MK.ISpeak"
+             BackgroundColor="#F4F4F4"
+             Title="Let's Practice Words!">
+
+    <StackLayout Padding="20" VerticalOptions="CenterAndExpand" Spacing="20">
+        <!-- Header Label -->
+        <Label Text="Choose Your Speaking Practice Option!" 
+               Padding="20"
+               FontSize="20" 
+               HorizontalOptions="Center"
+               FontAttributes="Bold"
+               TextColor="#555" />
+                
+        <!-- Single Word Practice Button -->
+        <Button Text="Practice Single Words"
+                VerticalOptions="Center"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnWordSpeakClicked" 
+                BackgroundColor="#1E88E5"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="100"
+                Margin = "10" />
+        
+        <!-- Practice Stories Button -->
+        <Button Text="Practice Stories"
+                VerticalOptions="Center"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnSpeechPageClicked" 
+                BackgroundColor="#FF185B96"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="100"
+                Margin = "10" />
+    </StackLayout>
+</ContentPage>

@@ -1,0 +1,8 @@
+namespace MK.Models;
+
+public class TroubleWord
+{
+    public string Word { get; set; } // The trouble word
+    public int Frequency { get; set; } // How many times it was mispronounced
+    public DateTime LastEncountered { get; set; } // When it was last encountered
+}

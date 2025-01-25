@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MK.UserInput"
+             Title="About You!">
+    
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="30,20"
+            Spacing="25">
+
+            <Label
+                Text="Tell Us About Yourself!"
+                TextColor ="#FF03142C"
+                FontSize = "30"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Label
+                Text="Please Enter Your Name"
+                FontAttributes ="Bold"
+                FontSize = "20"
+                TextColor ="#FF0A3A82"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Entry x:Name ="entry"
+                Placeholder="Enter your Name"
+                TextChanged = "OnEntryTextChanged"
+                Completed = "OnEntryCompleted" />
+
+            <Label
+                Text="Please Enter Your Age"
+                FontAttributes ="Bold"
+                FontSize = "20"
+                TextColor ="#FF0A3A82"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Picker x:Name= "agepicker"
+                SelectedIndexChanged = "OnAgeSelected">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>1</x:String>
+                        <x:String>2</x:String>
+                        <x:String>3</x:String>
+                        <x:String>4</x:String>
+                        <x:String>5</x:String>
+                        <x:String>6</x:String>
+                        <x:String>7</x:String>
+                        <x:String>8</x:String>
+                        <x:String>9</x:String>
+                        <x:String>10</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+        
+
+            <Label
+                Text="Please Enter Your Grade in School"
+                FontAttributes ="Bold"
+                FontSize = "20"
+                TextColor ="#FF0A3A82"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+
+            <Picker x:Name= "picker"
+                SelectedIndexChanged = "OnSelectedIndexChanged">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>1st</x:String>
+                        <x:String>2nd</x:String>
+                        <x:String>3rd</x:String>
+                        <x:String>4th</x:String>
+                        <x:String>5th</x:String>
+                        <x:String>6th</x:String>
+                        <x:String>7th</x:String>
+                        <x:String>8th</x:String>
+
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Label
+                Text="Choose Your Reading Level"
+                FontAttributes ="Bold"
+                FontSize = "20"
+                TextColor ="#FF0A3A82"
+                Style="{StaticResource Headline}"
+                SemanticProperties.HeadingLevel="Level1" />
+
+            <Picker x:Name="readingLevelPicker"
+                SelectedIndexChanged="OnReadingLevelChanged">
+                <Picker.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Beginner (Picture Books)</x:String>
+                        <x:String>Early Reader</x:String>
+                        <x:String>Intermediate (Simple Chapters)</x:String>
+                        <x:String>Advanced (Full Chapter Books)</x:String>
+                        <x:String>Young Adult (Complex Plots)</x:String>
+                    </x:Array>
+                </Picker.ItemsSource>
+            </Picker>
+
+            <Label
+                Text="Choose Your Interests (Select all that apply)"
+                FontAttributes="Bold"
+                FontSize="20"
+                TextColor="#FF0A3A82"
+                Style="{StaticResource Headline}" />
+
+            <CollectionView
+                x:Name="InterestsCollectionView"
+                SelectionMode="Multiple"
+                SelectionChanged="OnInterestsSelectionChanged"
+                HeightRequest="350">
+
+                <CollectionView.ItemsSource>
+                    <x:Array Type="{x:Type x:String}">
+                        <x:String>Adventure</x:String>
+
+                        <x:String>Animals</x:String>
+                        <x:String>Art</x:String>
+                        <x:String>Fantasy</x:String>
+                        <x:String>Science Fiction</x:String>
+                        <x:String>Mystery</x:String>
+                        <x:String>Nature</x:String>
+            
+                    </x:Array>
+                </CollectionView.ItemsSource>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Stroke="#FF454545" StrokeThickness=".3" Padding="10" Margin="5">
+                            <Label Text="{Binding .}" VerticalOptions="Center" HorizontalOptions="Center" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+
+            <Button
+            Text="Save"
+            Clicked="OnSaveClicked"
+            BackgroundColor="#FF143094"
+            TextColor="White"
+            FontAttributes="Bold"
+            Margin="10" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

@@ -28,5 +28,12 @@
 	</array>
 	<key>XSAppIconAssets</key>
 	<string>Assets.xcassets/appicon.appiconset</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires access to the microphone for recording audio.</string>
+	<key>NSDocumentsUsageDescription</key>
+	<string>This app requires access to the documents folder for saving recordings.</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+
 </dict>
 </plist>

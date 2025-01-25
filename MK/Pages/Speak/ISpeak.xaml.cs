@@ -1,0 +1,40 @@
+using System.Globalization;
+using System.Threading;
+using Microsoft.Maui.Controls;
+using MK.Services;
+using System.Diagnostics;
+using Microsoft.Maui.Controls;
+using Microsoft.Maui.LifecycleEvents;
+using Microsoft.VisualBasic;
+using MK.Models;
+using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
+using Microsoft.CognitiveServices.Speech.PronunciationAssessment;
+using System.Text.Json;
+
+namespace MK;
+
+public partial class ISpeak : ContentPage
+{
+    private readonly ApiService _apiService;
+    private readonly ISpeechToText _speechToText;
+    public ISpeak(ApiService apiService, ISpeechToText speechToText)
+    {
+        InitializeComponent();
+        _apiService = apiService;
+        _speechToText = speechToText;
+    }
+
+    private async void OnWordSpeakClicked(object sender, EventArgs e)
+        {
+            // Navigate to WordSpeakPage
+            await Navigation.PushAsync(new WordSpeakPage(_apiService, _speechToText));
+        }
+
+        private async void OnSpeechPageClicked(object sender, EventArgs e)
+        {
+            // Navigate to SpeechPage
+            await Navigation.PushAsync(new SpeechPage(_apiService, _speechToText));
+        }
+}
+

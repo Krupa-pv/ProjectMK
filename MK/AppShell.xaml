@@ -4,12 +4,19 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:MK"
-    Shell.FlyoutBehavior="Flyout"
     Title="MK">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+        <Tab Title="Home" Icon="home_2.png">
+            <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}" />
+        </Tab>
+        
+        <Tab Title="Speak" Icon="speak_icon.png">
+            <ShellContent Route="ISpeak" ContentTemplate="{DataTemplate local:ISpeak}" />
+        </Tab> 
 
+        <Tab Title="More" Icon="more_icon.png">
+            <ShellContent Route="UserInput" ContentTemplate="{DataTemplate local:UserInput}" />
+        </Tab>
+    </TabBar>
 </Shell>
