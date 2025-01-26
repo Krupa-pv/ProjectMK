@@ -5,13 +5,41 @@
              Title="TestVision">
     <VerticalStackLayout x:Name = "Container">
         
-        <Button Text="Test Photo Upload" Clicked="OnTakePhotoButtonClicked" />
-        <Button Text="Test File Upload" Clicked="OnFileUpload" />
+        <Label
+            Text = "Choose a picture to learn words from!"
+            Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level1"
+                SemanticProperties.Description="Welcome to dot net Multi platform App U I" 
+               Padding="20"
+               HorizontalOptions="Center"
+               FontAttributes="Bold" />
+
+        <StackLayout  Spacing = "20">
+        <Button Text="Test Photo Upload" Clicked="OnTakePhotoButtonClicked" BackgroundColor="#FF041A2D" 
+                        TextColor="White" 
+                        CornerRadius="10" 
+                        Padding = "50"
+                                        FontSize="30"
+/>
+
+
+        <Button Text="Test File Upload" Clicked="OnFileUpload" BackgroundColor="#FF1D517D" 
+                        TextColor="White" 
+                        CornerRadius="10" 
+                        Padding = "50"
+                        FontSize="30"/>
+
+
+        </StackLayout>
+
+
+
         <Image  x:Name="showSelect"
                 Source="penguin.png"
                 Aspect="AspectFit"
-                HeightRequest = "400"
+                HeightRequest = "600"
                 VerticalOptions="Center"
+                Margin = "20"
                 SemanticProperties.Description="dot net bot in a hovercraft number nine">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
@@ -21,7 +49,8 @@
          <Label x:Name = "ClickedWord"
             Text=""
             VerticalOptions="Center" 
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center"
+            FontSize = "30" />
 
 
 

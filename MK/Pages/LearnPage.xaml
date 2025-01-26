@@ -22,7 +22,7 @@
                TextColor="{StaticResource SuperLightBlue}"/>
                 
         <!-- Single Word Practice Button -->
-        <Button Text="Learn New Vocab!"
+        <Button Text="Learn New Vocab"
                 Clicked="OnVocab" 
                 VerticalOptions="Center"
                 HorizontalOptions="FillAndExpand"
