@@ -283,15 +283,30 @@ public class ApiService
         }
     }
 
-    public async Task<SpeechInfo> GetSpeechInfo ()
+    public async Task<Tuple<string,string>> GetSpeechInfo ()
     {
+        Debug.WriteLine("getting speech info");
         var response  = await _httpClient.GetAsync($"api/SpeechAssess/info");
-        
-        //deserialize the JSON response
-        var speechJson = await response.Content.ReadAsStringAsync();
-        var speechInfo = JsonSerializer.Deserialize<SpeechInfo>(speechJson);
+        var content = "error";
+        Tuple<string,string> speechInfo = new Tuple<string, string>("error","error");
 
+        if(response.IsSuccessStatusCode){
+            content = await response.Content.ReadAsStringAsync();
+            var jsonResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(content);
+            string speechKey = jsonResponse.key;
+            string speechRegion = jsonResponse.region;
+            Debug.WriteLine("here and speecehkey is" + speechKey);
+            speechInfo = new Tuple<string, string>(speechKey,speechRegion);
+        }
+        else{
+            Debug.WriteLine("failed");
+        }
         return speechInfo;
+        //deserialize the JSON response
+       // var speechJson = await response.Content.ReadAsStringAsync();
+        //var speechInfo = JsonSerializer.Deserialize<SpeechInfo>(speechJson);
+
+        //return speechInfo;
  
     }
 

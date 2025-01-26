@@ -14,8 +14,6 @@ namespace MK.Platforms.MacCatalyst
 {
     public class SpeechToTextImplementation : ISpeechToText
     {
-        private string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR";
-        private string _speechRegion = "eastus";
         private ApiService _apiService; 
         public string _recognizedWord;
     
@@ -23,7 +21,7 @@ namespace MK.Platforms.MacCatalyst
         public SpeechToTextImplementation( ApiService apiService)
         {
             _apiService = apiService;
-            
+
         }
 
         //method for asynchronous creation of speech settings
@@ -278,7 +276,11 @@ namespace MK.Platforms.MacCatalyst
         Debug.WriteLine($"Attempt Number: {attemptTracker.AttemptCount}");
 
         // Configure speech service
-        var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
+        var response = await _apiService.GetSpeechInfo();
+
+        string speechKey = response.Item1;
+        string speechRegion = response.Item2;
+        var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
         speechConfig.SpeechRecognitionLanguage = culture.Name;
         speechConfig.OutputFormat = OutputFormat.Detailed; // Enable detailed output
 
@@ -430,7 +432,12 @@ public async Task<PronunciationAssessmentResult> DiscreteAssessPronunciation(
         return null;
     }
 
-    var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
+    var response = await _apiService.GetSpeechInfo();
+
+    string speechKey = response.Item1;
+    string speechRegion = response.Item2;
+
+    var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
     speechConfig.SpeechRecognitionLanguage = culture.Name;
 
     var pronunciationConfig = new PronunciationAssessmentConfig(
@@ -499,7 +506,11 @@ public async Task<PronunciationAssessmentResult> DiscreteAssessPronunciation(
             CancellationToken cancellationToken)
         {
             Debug.WriteLine($"Pronunciation Assessed here");
-            var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
+            var response = await _apiService.GetSpeechInfo();
+
+            string speechKey = response.Item1;
+            string speechRegion = response.Item2;
+            var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
             speechConfig.SpeechRecognitionLanguage = culture.Name;
 
             var pronunciationConfig = new PronunciationAssessmentConfig(

@@ -139,6 +139,9 @@ private async void OnStartRecordingClicked(object sender, EventArgs e)
         }
 
         // Start recognition and validate the word
+
+
+
         var success = await _speechToText.ListenAndAssessAsync(
             _currentWord,
             CultureInfo.GetCultureInfo("en-US"),

@@ -51,27 +51,21 @@ namespace MKBackend.Controllers
         }
 
         [HttpGet("info")]
-        public async Task<IActionResult> ReturnSpeechInfo()
+        public async Task<JsonResult> ReturnSpeechInfo()
         {
             try
             {
                 string _speechKey = _configuration["_speechKey"];
                 string _speechRegion = _configuration["_speechRegion"];
 
-                return Ok(new
-                {
-                    SpeechKey = _speechKey,
-                    SpeechRegion = _speechRegion
-                });
+                return new JsonResult(new {key = _speechKey, region = _speechRegion});
 
             }
             catch (Exception ex)
             {
-               return StatusCode(500, new
-                {
-                    Message = "An unexpected error occurred",
-                    Details = ex.Message
-                });
+               string message = "Unable to acquire key and region";
+                Console.WriteLine(message, ex);
+                return new JsonResult(new { error = message });
             }
         }
 
