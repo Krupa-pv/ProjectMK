@@ -19,6 +19,61 @@ public class AIStoryController : ControllerBase
         
     }
     
+    [HttpPost("generate_read")]
+    public async Task<IActionResult> GenerateStory([FromBody] ReadStoryRequest request)
+    {
+        int length = request.Length switch{
+            "short" => 100,
+            "medium" => 300,
+            "long" => 500,
+            _ => 300
+        };
+
+        var prompt = $"Write an educational short story for a student in grade {request.Grade}. "+
+                    $"This student has a {request.ReadingLevel} reading level and interests in {request.Interests}."+
+                    $"The story should be {request.Difficulty} in difficulty and {length} words in length. " + 
+                    $"After the story, provide 5 comprehension questions with four answer choices formatted as 'a) [answer choice]' with the correct answer indicated by appending (C) at the end of the answer. " + 
+                    $"Ensure that each question is {request.Difficulty} in difficulty aimed at assessing the student's understanding of the story";
+        //make sure to include trouble words here later on once configuring immersive reader
+
+        
+
+
+        ChatCompletionsOptions chatCompletionsOptions = new ()
+        {
+            MaxTokens = 8000,
+            Temperature = 0.7f,
+            FrequencyPenalty = 0.0f,
+            PresencePenalty = 0.0f
+        };
+
+        // add messages to the readonly mssages collection
+        chatCompletionsOptions.Messages.Add(new ChatMessage(ChatRole.System, "You are a story-writing assistant that writes fun, engaging, and educational stories for students."));
+        chatCompletionsOptions.Messages.Add(new ChatMessage(ChatRole.User, prompt));
+
+
+        try{
+            var completionResponse = await _oaiclient.GetChatCompletionsAsync("gpt-4o", chatCompletionsOptions);
+            var story = completionResponse.Value.Choices[0].Message.Content;
+
+            if (!string.IsNullOrWhiteSpace(story))
+            {
+                Console.WriteLine("confirmed generated story");
+                return Ok(new { Story = story });
+            }
+            else
+            {
+                return BadRequest(new { Error = "Error! No story was generated." });
+            }
+        }
+        catch (RequestFailedException e)
+        {
+            return BadRequest(new { Error = e.Message });
+        }
+
+
+        
+    }
 
     [HttpPost("generate_speak")]
     public async Task<IActionResult> GenerateSpeechStory([FromBody] SpeechStoryRequest request)

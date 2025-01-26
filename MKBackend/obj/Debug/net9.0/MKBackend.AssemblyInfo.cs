@@ -14,11 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MKBackend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-<<<<<<< Updated upstream
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c9d2841300b7a51734180070078dc1c367acfc3e")]
-=======
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c82ab7adb71577eab6f9a3e6e8a93d8de5cc6ca7")]
->>>>>>> Stashed changes
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a08285fd776db9f5d5bf9058e846d8dd5bda0b99")]
 [assembly: System.Reflection.AssemblyProductAttribute("MKBackend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MKBackend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

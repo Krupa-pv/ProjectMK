@@ -39,7 +39,7 @@ namespace MKBackend.Controllers
             TenantId = configuration["TenantId"];
             ClientId = configuration["ClientId"];
             ClientSecret = configuration["ClientSecret"];
-            Subdomain = "imreader";
+            Subdomain = configuration["Subdomain"];
 
             if (string.IsNullOrWhiteSpace(TenantId))
             {
@@ -62,8 +62,8 @@ namespace MKBackend.Controllers
             }
 
             _container = cosmosClient.GetContainer(
-                configuration["CosmosDb:DatabaseName"],
-                configuration["CosmosDb:ContainerName"]
+                configuration["DatabaseName"],
+                configuration["ContainerName"]
             );
 
         }
@@ -83,6 +83,9 @@ namespace MKBackend.Controllers
         [HttpGet]
         public async Task<JsonResult> GetTokenAndSubdomain()
         {
+
+            Console.WriteLine("gettng tokensubdomain");
+
             try
             {
                 string tokenResult = await GetTokenAsync();
