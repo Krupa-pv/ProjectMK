@@ -20,12 +20,16 @@ public partial class WordSpeakPage : ContentPage
     private readonly ISpeechToText _speechToText;
     private CancellationTokenSource _cancellationTokenSource;
     private string _userId;
-    private int _attemptCount;
+    
     private string _currentWord;
     private List<string> _generatedWords;
+    private AttemptTracker _attemptTracker = new AttemptTracker(); // Track attempts for the current word
 
     private int _currentWordIndex;        // Index of the current word in the list
     private bool _isSessionActive; 
+    private int _attemptCount;
+    private readonly string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR"; // Replace with your Azure Speech Key
+    private readonly string _speechRegion = "eastus";  
 
 
     public WordSpeakPage(ApiService apiService, ISpeechToText speechToText)
@@ -44,10 +48,9 @@ public partial class WordSpeakPage : ContentPage
         }
         _generatedWords = new List<string>();
         _currentWordIndex = 0;
-        _attemptCount = 0;
+        _attemptTracker.AttemptCount = 0;
         _isSessionActive = false;
     }
-
     // Generate words based on user input
     private async void OnGenerateWordClicked(object sender, EventArgs e)
     {
@@ -97,142 +100,182 @@ public partial class WordSpeakPage : ContentPage
 
     
     // Start practicing the current word
-    private async void OnStartRecordingClicked(object sender, EventArgs e)
+ 
+
+
+
+
+
+private async void OnStartRecordingClicked(object sender, EventArgs e)
+{
+    if (_attemptTracker.AttemptCount > 3)
     {
-        if (!_isSessionActive || _currentWordIndex >= _generatedWords.Count)
+        MainThread.BeginInvokeOnMainThread(() =>
         {
-            await DisplayAlert("Error", "No words to practice. Please generate words first.", "OK");
-            return;
-        }
+            FeedbackLabel.Text = "You've already exceeded the maximum of 3 attempts. Please generate a new word.";
+        });
+        Debug.WriteLine("Exceeded maximum attempts. Cannot proceed.");
+        return;
+    }
 
-        if (_cancellationTokenSource == null || _cancellationTokenSource.IsCancellationRequested)
+    try
+    {
+        Debug.WriteLine("Start Recording button clicked.");
+
+        MainThread.BeginInvokeOnMainThread(() =>
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-        }
+            StartRecordingButton.IsEnabled = false; // Disable button during recognition
+        });
 
+        // Ensure microphone permissions
         var isAuthorized = await _speechToText.RequestPermissions();
         if (!isAuthorized)
         {
-            await DisplayAlert("Permission Error", "Microphone access is required for speech recognition.", "OK");
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                FeedbackLabel.Text = "Microphone access is required for speech recognition.";
+            });
+            Debug.WriteLine("Microphone access denied.");
             return;
         }
 
-        StartRecordingButton.IsEnabled = false;
-        var wordRecognized = false;
-
-        try
-        {
-            var culture = CultureInfo.GetCultureInfo("en-US");
-
-            var assessmentResult = await _speechToText.DiscreteAssessPronunciation(
-                culture,
-                _currentWord,
-                new Progress<string>(partialText =>
+        // Start recognition and validate the word
+        var success = await _speechToText.ListenAndAssessAsync(
+            _currentWord,
+            CultureInfo.GetCultureInfo("en-US"),
+            feedback =>
+            {
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    Debug.WriteLine($"Microphone Input Recognized: {partialText}");
-
-                }),
-                _cancellationTokenSource.Token);
-            if (assessmentResult == null)
+                    FeedbackLabel.Text = feedback; // Dynamically update feedback label
+                });
+                Debug.WriteLine($"Feedback Updated: {feedback}"); // Log feedback for debugging
+            },
+            isEnabled =>
             {
-                Debug.WriteLine("Assessment result is null.");
-                return;
-            }
-
-            FeedbackLabel.Text = "Assessing Word!";
-            Debug.WriteLine($"Assessment Result Details: AccuracyScore={assessmentResult.AccuracyScore}, FluencyScore={assessmentResult.FluencyScore}");
-
-
-            if (assessmentResult.AccuracyScore >= 80 
-            && assessmentResult.FluencyScore >= 80)
-            {
-                wordRecognized = true;
-                Debug.WriteLine("Word recognized with sufficient accuracy and fluency!");
-
-                FeedbackLabel.Text = "Correct! Moving to the next word...";
-                await Task.Delay(2000);
-                await NextWordAsync();
-            }
-
-            else if (assessmentResult != null 
-            && assessmentResult.AccuracyScore < 80 
-            && assessmentResult.FluencyScore < 80)
-            {
-                _attemptCount++;
-                if (_attemptCount >= 3)
+                MainThread.BeginInvokeOnMainThread(() =>
                 {
-                    var troubleWord = new TroubleWord
-                    {
-                        Word = _currentWord,
-                        Frequency = 1,
-                        LastEncountered = DateTime.UtcNow
-                    };
+                    StartRecordingButton.IsEnabled = isEnabled; // Re-enable button after processing
+                });
+            },
+            CancellationToken.None,
+            _attemptTracker);
 
-                    var success = await _apiService.UpdateTroubleWordAsync(_userId, troubleWord);
-                    Debug.WriteLine(success ? "Trouble word saved/updated successfully!" : "Failed to save/update trouble word.");
-                    FeedbackLabel.Text = "Let's try this word again later. Moving to the next word.";
-
-                    await Task.Delay(2000);
-                    await NextWordAsync();
-                }
-                else
-                {
-                    FeedbackLabel.Text = $"Try again! Attempts left: {3 - _attemptCount}";
-                    StartRecordingButton.IsEnabled = true;
-                }
-            }
-        }
-        catch (Exception ex)
+        if (success)
         {
-            Debug.WriteLine($"Error during pronunciation assessment: {ex.Message}");
-            await DisplayAlert("Error", ex.Message, "OK");
-        }
-        finally
-        {
-            if (_isSessionActive)
+            MainThread.BeginInvokeOnMainThread(() =>
             {
-                StartRecordingButton.IsEnabled = true;
-            }
+                FeedbackLabel.Text = "Correct! Moving to the next word.";
+            });
+            Debug.WriteLine("Correct word recognized. Moving to the next word.");
+            await MoveToNextWordAsync(_attemptTracker); // Reset tracker for the next word
         }
-    }
-
-
-
-
-
-private async Task NextWordAsync()
-    {
-        _attemptCount = 0;
-        _currentWordIndex++;
-
-        if (_currentWordIndex < _generatedWords.Count)
+        else if (_attemptTracker.AttemptCount > 3)
         {
-            _currentWord = _generatedWords[_currentWordIndex];
-            WordLabel.Text = $"Practice this word: {_currentWord}";
-            StartRecordingButton.IsEnabled = true;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                FeedbackLabel.Text = "Maximum attempts reached. Moving to the next word.";
+            });
+            Debug.WriteLine("Exceeded maximum attempts. Moving to the next word.");
+            await MoveToNextWordAsync(_attemptTracker);
         }
         else
         {
-            _isSessionActive = false;
-            WordLabel.Text = "All words completed! Generate new words to continue practicing.";
-            FeedbackLabel.Text = "Great job! You've completed all the words.";
-            StartRecordingButton.IsEnabled = false;
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                FeedbackLabel.Text = $"Incorrect. Attempt {_attemptTracker.AttemptCount - 1} of 3. Try again!";
+            });
+            Debug.WriteLine($"Incorrect attempt {_attemptTracker.AttemptCount - 1}.");
         }
-
-        Debug.WriteLine($"Transitioned to word index: {_currentWordIndex}");
     }
+    catch (Exception ex)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            FeedbackLabel.Text = $"An error occurred: {ex.Message}";
+        });
+        Debug.WriteLine($"Error in OnStartRecordingClicked: {ex.Message}");
+    }
+    finally
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            StartRecordingButton.IsEnabled = true; // Ensure button is enabled after processing
+        });
+        Debug.WriteLine("Finished processing OnStartRecordingClicked.");
+    }
+}
+
+
+
+
+
+private async Task SaveTroubleWordAsync()
+{
+    var troubleWord = new TroubleWord
+    {
+        Word = _currentWord,
+        Frequency = 1,
+        LastEncountered = DateTime.UtcNow
+    };
+
+    Debug.WriteLine($"Sending trouble word for userId: {_userId}");
+    Debug.WriteLine($"TroubleWord Data: {JsonSerializer.Serialize(troubleWord)}");
+
+    var success = await _apiService.UpdateTroubleWordAsync(_userId, troubleWord);
+    if (success)
+    {
+        Debug.WriteLine("Trouble word saved successfully.");
+    }
+    else
+    {
+        Debug.WriteLine("Error saving trouble word.");
+    }
+}
+
+
+private async Task MoveToNextWordAsync(AttemptTracker attemptTracker)
+{
+    attemptTracker.AttemptCount = 1;
+    _currentWordIndex++;
+
+    if (_currentWordIndex < _generatedWords.Count)
+    {
+        _currentWord = _generatedWords[_currentWordIndex];
+        WordLabel.Text = $"Practice this word: {_currentWord}";
+        FeedbackLabel.Text = "Click Start Recording to begin practicing!";
+        StartRecordingButton.IsEnabled = true; // Enable button for new word
+    }
+    else
+    {
+        _isSessionActive = false;
+        WordLabel.Text = "All words completed!";
+        FeedbackLabel.Text = "Great job! You've completed all the words.";
+        StartRecordingButton.IsEnabled = false; // Disable button after completion
+    }
+
+    Debug.WriteLine($"Transitioned to word index: {_currentWordIndex}");
+}
+
+
+
 
 private void OnStopRecordingClicked(object sender, EventArgs e)
 {
-   //Cancel current recording
-    _cancellationTokenSource?.Cancel();
+    if (_cancellationTokenSource != null && !_cancellationTokenSource.IsCancellationRequested)
+    {
+        // Cancel the ongoing recording
+        _cancellationTokenSource.Cancel();
+        Debug.WriteLine("Recording stopped by the user.");
+    }
 
-    //Resettting session state
+    // Reset session state
     _isSessionActive = false;
     StartRecordingButton.IsEnabled = true;
     FeedbackLabel.Text = "Recording stopped. You can start again or generate new words.";
     WordLabel.Text = "Ready to start again.";
 }
+
 
 
 
