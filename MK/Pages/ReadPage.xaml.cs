@@ -8,6 +8,9 @@ using Microsoft.VisualBasic;
 public partial class ReadPage : ContentPage
 {
 
+        int[] correct = new int[5];
+
+
 	private readonly ApiService _apiService;
 	public ReadPage(ApiService apiService)
 	{
@@ -36,6 +39,7 @@ public partial class ReadPage : ContentPage
             Debug.WriteLine(components.Length);
             
             DisplayIMReader(components[0]);
+            parseQuestions(components[1]);
 
 		}
 		catch(Exception ex){
@@ -142,6 +146,84 @@ public partial class ReadPage : ContentPage
                 LoadingIndicator.IsRunning = false;  // Stop loading spinner
                 LoadingIndicator.IsVisible = false;
             }
+
+    }
+
+     private async void parseQuestions (string OAInput){
+
+        StackLayout[] allQuestions = {Question1, Question2, Question3, Question4, Question5};
+        Label[] allLabels = {Label1, Label2, Label3, Label4, Label5};
+        RadioButton[] allAnswers = {Answer1, Answer2, Answer3, Answer4, Answer5, Answer6, Answer7, Answer8, Answer9, Answer10, Answer11, Answer12, Answer13, Answer14, Answer15, Answer16, Answer17, Answer18, Answer19, Answer20};
+
+        Debug.WriteLine(OAInput);
+        List<String> parsedElements = new List<String>();
+
+        int endIndex = -1;
+        for(int i = 1; i <= 5; i++){
+            string num = i.ToString();
+            int index = OAInput.IndexOf(num+".");
+
+            string[] searchKeys = {"a)","b)","c)","d)"};
+            endIndex = OAInput.Substring(index+3).IndexOf(searchKeys[0]);
+
+
+            string question = OAInput.Substring(index+3,endIndex);
+            Debug.WriteLine(question);
+            parsedElements.Add(question);
+
+            int correctA = -1;
+
+            int firstIndex;
+            int secondIndex;
+            for(int j = 0; j < 3; j++){
+
+                firstIndex = OAInput.Substring(index+3).IndexOf(searchKeys[j]);
+                secondIndex = OAInput.Substring(index+3).IndexOf(searchKeys[j+1]);
+                string answerChoice = OAInput.Substring(index+3).Substring(firstIndex+3, secondIndex-firstIndex-6);
+                if(answerChoice.IndexOf("(C)")!=-1){
+                    correctA = j;
+                    answerChoice = answerChoice.Substring(0, answerChoice.IndexOf("(C)")-1);
+                }
+                Debug.WriteLine(answerChoice);
+                parsedElements.Add(answerChoice);
+            }
+            string lastChoice;
+            firstIndex = OAInput.Substring(index+3).IndexOf(searchKeys[3]);
+            string num2 = (i+1).ToString();
+            secondIndex = OAInput.Substring(index+3).IndexOf(num2+".");
+            if(secondIndex==-1){
+                lastChoice = OAInput.Substring(index+3).Substring(firstIndex+3);
+            }
+            else{
+                lastChoice = OAInput.Substring(index+3).Substring(firstIndex+3, secondIndex-firstIndex-6);
+            }
+            if(lastChoice.IndexOf("(C)")!=-1){
+                    correctA = 3;
+                    lastChoice = lastChoice.Substring(0, lastChoice.IndexOf("(C)")-1);
+
+                }
+            Debug.WriteLine(lastChoice);
+            parsedElements.Add(lastChoice);
+            Debug.WriteLine(correctA);
+            parsedElements.Add(correctA.ToString());
+        }
+        int currentAnswer = 0;
+        for(int i = 0; i < 5; i++){
+            allQuestions[i].IsVisible = !allQuestions[i].IsVisible;
+            allLabels[i].Text = parsedElements[6*i];
+            for(int j = 0; j < 4; j++){
+                allAnswers[currentAnswer].Content = parsedElements[6*i+1+j];
+                currentAnswer++;
+            }
+            correct[i]=Int32.Parse(parsedElements[6*i+5]);
+        }
+
+    }
+
+
+    private async void OnSubmit(object sender, EventArgs e){
+
+
 
     }
 

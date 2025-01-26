@@ -46,6 +46,60 @@
             <WebView x:Name="ImmersiveReaderWebView" HeightRequest="800" HorizontalOptions="FillAndExpand" 
                 VerticalOptions="FillAndExpand"/>
 
+            <Frame BackgroundColor="{StaticResource SuperLightBlue}" CornerRadius="10" Padding="10" Margin = "10" HasShadow="False">
+                
+                <StackLayout x:Name="Question1" IsVisible="false">
+                    <Label x:Name = "Label1" Text="What's your favorite animal?" />
+                    <RadioButton x:Name = "Answer1" Content="Cat" />
+                    <RadioButton x:Name = "Answer2" Content="Dog" />
+                    <RadioButton x:Name = "Answer3" Content="Elephant" />
+                    <RadioButton x:Name = "Answer4" Content="Monkey"
+                                IsChecked="true" />
+                </StackLayout>
+            </Frame>
+
+            <Frame BackgroundColor="{StaticResource Secondary}" CornerRadius="10" Padding="10" Margin = "10" HasShadow="False">
+             <StackLayout x:Name="Question2" IsVisible="false">
+                <Label x:Name = "Label2" Text="What's your favorite animal 2?" />
+                <RadioButton x:Name = "Answer5" Content="Cat" />
+                <RadioButton x:Name = "Answer6" Content="Dog" />
+                <RadioButton x:Name = "Answer7" Content="Elephant" />
+                <RadioButton x:Name = "Answer8" Content="Monkey"
+                            IsChecked="true" />
+            </StackLayout> 
+            </Frame>
+            <Frame BackgroundColor="{StaticResource PrimaryDark}" CornerRadius="10" Padding="10" Margin = "10" HasShadow="False">
+            <StackLayout x:Name="Question3" IsVisible="false">
+                <Label x:Name = "Label3" Text="What's your favorite animal 3" />
+                <RadioButton x:Name = "Answer9" Content="Cat" />
+                <RadioButton x:Name = "Answer10" Content="Dog" />
+                <RadioButton x:Name = "Answer11" Content="Elephant" />
+                <RadioButton x:Name = "Answer12" Content="Monkey"
+                            IsChecked="true" />
+            </StackLayout> 
+            </Frame>
+            <Frame BackgroundColor="{StaticResource MediumBlue}" CornerRadius="10" Padding="10" Margin = "10" HasShadow="False">
+            <StackLayout x:Name="Question4" IsVisible="false">
+                <Label x:Name = "Label4" Text="What's your favorite animal 4" />
+                <RadioButton x:Name = "Answer13" Content="Cat" />
+                <RadioButton x:Name = "Answer14" Content="Dog" />
+                <RadioButton x:Name = "Answer15" Content="Elephant" />
+                <RadioButton x:Name = "Answer16" Content="Monkey"
+                            IsChecked="true" />
+            </StackLayout>
+            </Frame>
+            <Frame BackgroundColor="{StaticResource Primary}" CornerRadius="10" Padding="10" Margin = "10" HasShadow="False">
+             <StackLayout x:Name="Question5" IsVisible="false">
+                <Label x:Name = "Label5" Text="What's your favorite animal 5" />
+                <RadioButton x:Name = "Answer17" Content="Cat" />
+                <RadioButton x:Name = "Answer18" Content="Dog" />
+                <RadioButton x:Name = "Answer19" Content="Elephant" />
+                <RadioButton x:Name = "Answer20" Content="Monkey"
+                            IsChecked="true" />
+            </StackLayout>
+            </Frame>
+            <Button Text="Submit Answers!" Clicked="OnSubmit" />
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

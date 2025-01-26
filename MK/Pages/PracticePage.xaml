@@ -32,7 +32,7 @@
                 Margin = "5" />
         
         <!-- Practice Stories Button -->
-        <Button Text="Pracice Your Pronounciation"
+        <Button Text="Practice Your Pronounciation"
                 Clicked="OnPronunciation" VerticalOptions="Center"
                 HorizontalOptions="FillAndExpand"
                 BackgroundColor="#FF185B96"
