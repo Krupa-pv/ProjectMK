@@ -20,6 +20,7 @@ public partial class ISpeak : ContentPage
     private readonly ISpeechToText _speechToText;
     public ISpeak(ApiService apiService, ISpeechToText speechToText)
     {
+        Debug.WriteLine("Navigating to speech page");
         InitializeComponent();
         _apiService = apiService;
         _speechToText = speechToText;
@@ -28,12 +29,14 @@ public partial class ISpeak : ContentPage
     private async void OnWordSpeakClicked(object sender, EventArgs e)
         {
             // Navigate to WordSpeakPage
+            Debug.WriteLine("Navigating to word page");
             await Navigation.PushAsync(new WordSpeakPage(_apiService, _speechToText));
         }
 
         private async void OnSpeechPageClicked(object sender, EventArgs e)
         {
             // Navigate to SpeechPage
+            Debug.WriteLine("Navigating to speechstory page");
             await Navigation.PushAsync(new SpeechPage(_apiService, _speechToText));
         }
 }

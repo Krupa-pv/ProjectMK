@@ -18,7 +18,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string connectionString = builder.Configuration["ConnectionString"];
-Console.WriteLine($"Cosmos DB Connection String: {connectionString}");
+
 
 string databaseName = builder.Configuration["DatabaseName"];
 string containerName = builder.Configuration["ContainerName"];

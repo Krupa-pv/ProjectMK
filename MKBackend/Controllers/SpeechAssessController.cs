@@ -22,9 +22,11 @@ namespace MKBackend.Controllers
     public class SpeechAssessController : ControllerBase
     {
         private readonly Container _container;
+        private IConfiguration _configuration;
 
         public SpeechAssessController(IConfiguration configuration, CosmosClient cosmosClient)
         {
+            _configuration = configuration;
             string databaseName = configuration["DatabaseName"];
             string containerName = configuration["ContainerName"];
             _container = cosmosClient.GetContainer(databaseName,containerName);
@@ -47,6 +49,32 @@ namespace MKBackend.Controllers
                 Console.WriteLine("Reached GetPronunciation Data Error");
             }
         }
+
+        [HttpGet("info")]
+        public async Task<IActionResult> ReturnSpeechInfo()
+        {
+            try
+            {
+                string _speechKey = _configuration["_speechKey"];
+                string _speechRegion = _configuration["_speechRegion"];
+
+                return Ok(new
+                {
+                    SpeechKey = _speechKey,
+                    SpeechRegion = _speechRegion
+                });
+
+            }
+            catch (Exception ex)
+            {
+               return StatusCode(500, new
+                {
+                    Message = "An unexpected error occurred",
+                    Details = ex.Message
+                });
+            }
+        }
+
         [HttpPut("{userId}/update")]
         public async Task<IActionResult> UpdateTroubleWord(string userId, [FromBody] TroubleWord troubleWord)
         {

@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/MKBackend.csproj": {}
+    "/Users/krupavenkatesan/CWRU/Hackathon/MKBackend/MKBackend.csproj": {}
   },
   "projects": {
-    "/Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/MKBackend.csproj": {
+    "/Users/krupavenkatesan/CWRU/Hackathon/MKBackend/MKBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/MKBackend.csproj",
+        "projectUniqueName": "/Users/krupavenkatesan/CWRU/Hackathon/MKBackend/MKBackend.csproj",
         "projectName": "MKBackend",
-        "projectPath": "/Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/MKBackend.csproj",
-        "packagesPath": "/Users/menakawijeratne/.nuget/packages/",
-        "outputPath": "/Users/menakawijeratne/Documents/hackathon/ProjectMK/MKBackend/obj/",
+        "projectPath": "/Users/krupavenkatesan/CWRU/Hackathon/MKBackend/MKBackend.csproj",
+        "packagesPath": "/Users/krupavenkatesan/.nuget/packages/",
+        "outputPath": "/Users/krupavenkatesan/CWRU/Hackathon/MKBackend/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/Users/menakawijeratne/.nuget/NuGet/NuGet.Config"
+          "/Users/krupavenkatesan/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -37,7 +37,7 @@
         "restoreAuditProperties": {
           "enableAudit": "true",
           "auditLevel": "low",
-          "auditMode": "all"
+          "auditMode": "direct"
         },
         "SdkAnalysisLevel": "9.0.100"
       },
@@ -113,7 +113,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

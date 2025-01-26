@@ -8,26 +8,44 @@ using Microsoft.CognitiveServices.Speech.PronunciationAssessment;
 using MK;
 using Microsoft.Extensions.Configuration;
 using MK.Models;
+using MK.Services;
 
 namespace MK.Platforms.MacCatalyst
 {
     public class SpeechToTextImplementation : ISpeechToText
     {
-
-        private readonly IConfiguration Configuration;
-        private readonly string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR"; // Replace with your Azure Speech Key
-        private readonly string _speechRegion = "eastus";  
+        private string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR";
+        private string _speechRegion = "eastus";
+        private ApiService _apiService; 
         public string _recognizedWord;
+    
 
-        public SpeechToTextImplementation(IConfiguration configuration){
-            /*Configuration = configuration; 
-            var _speechKey = Configuration["SpeechService: Key"];
-            var _speechRegion = Configuration["SpeechService: Region"];
-            Debug.WriteLine($"speechkey: {_speechKey}");
-            Debug.WriteLine($"speechkey: {_speechRegion}");*/
+        public SpeechToTextImplementation( ApiService apiService)
+        {
+            _apiService = apiService;
             
-            
-        } 
+        }
+
+        //method for asynchronous creation of speech settings
+        /*public static async Task<SpeechToTextImplementation> CreateAsync(ApiService apiService)
+        {
+            var instance = new SpeechToTextImplementation(apiService);
+            await instance.InitializeSpeechSettingsAsync();
+            return instance;
+        }
+
+        private async Task InitializeSpeechSettingsAsync()
+        {
+            var speechinfo = await _apiService.GetSpeechInfo();
+            Debug.WriteLine($"Speech info access");
+
+            _speechKey = speechinfo.SpeechKey;
+            _speechRegion = speechinfo.SpeechRegion;
+            Debug.WriteLine($"Speech Key: {_speechKey}");
+            Debug.WriteLine($"Speech Region: {_speechRegion}");
+
+        }*/
+
         public async Task<bool> RequestPermissions()
         {
             try
@@ -52,8 +70,9 @@ namespace MK.Platforms.MacCatalyst
             }
         }
 
+        
   
- public async Task<(string RecognizedText, AudioConfig AudioConfig)> Listen(
+ /*public async Task<(string RecognizedText, AudioConfig AudioConfig)> Listen(
     CultureInfo culture,
     IProgress<string> recognitionResult,
     CancellationToken cancellationToken)
@@ -108,7 +127,7 @@ namespace MK.Platforms.MacCatalyst
     {
         await recognizer.StopContinuousRecognitionAsync();
     }
-}
+}*/
     
 
 

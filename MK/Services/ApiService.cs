@@ -283,6 +283,18 @@ public class ApiService
         }
     }
 
+    public async Task<SpeechInfo> GetSpeechInfo ()
+    {
+        var response  = await _httpClient.GetAsync($"api/SpeechAssess/info");
+        
+        //deserialize the JSON response
+        var speechJson = await response.Content.ReadAsStringAsync();
+        var speechInfo = JsonSerializer.Deserialize<SpeechInfo>(speechJson);
+
+        return speechInfo;
+ 
+    }
+
 
     public async Task<ImageSource> uploadFileToBackend (IFilePickerService picker){
         try
@@ -371,6 +383,13 @@ public class ApiService
         }
     }
 
+
+    //class used to map the JSON response
+    public class SpeechInfo
+        {
+            public string SpeechKey { get; set; }
+            public string SpeechRegion { get; set; }
+        }
 
 }
 

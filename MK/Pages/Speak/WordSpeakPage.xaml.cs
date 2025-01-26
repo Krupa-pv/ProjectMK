@@ -48,7 +48,7 @@ public partial class WordSpeakPage : ContentPage
         }
         _generatedWords = new List<string>();
         _currentWordIndex = 0;
-        _attemptTracker.AttemptCount = 0;
+        _attemptTracker.AttemptCount = 1;
         _isSessionActive = false;
     }
     // Generate words based on user input
@@ -177,6 +177,7 @@ private async void OnStartRecordingClicked(object sender, EventArgs e)
                 FeedbackLabel.Text = "Maximum attempts reached. Moving to the next word.";
             });
             Debug.WriteLine("Exceeded maximum attempts. Moving to the next word.");
+            await SaveTroubleWordAsync(_currentWord);
             await MoveToNextWordAsync(_attemptTracker);
         }
         else
@@ -210,11 +211,11 @@ private async void OnStartRecordingClicked(object sender, EventArgs e)
 
 
 
-private async Task SaveTroubleWordAsync()
+private async Task SaveTroubleWordAsync(string word)
 {
     var troubleWord = new TroubleWord
     {
-        Word = _currentWord,
+        Word = word,
         Frequency = 1,
         LastEncountered = DateTime.UtcNow
     };
