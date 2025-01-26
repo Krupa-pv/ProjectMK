@@ -7,7 +7,7 @@
     <ContentPage.Resources>
         <drawable:BoundingBoxDrawable x:Key="drawable" />
     </ContentPage.Resources>
-    <VerticalStackLayout>
+    <VerticalStackLayout x:Name = "Container">
         
         <Label 
             Text="Welcome to .NET MAUI!"
@@ -21,7 +21,7 @@
                 HorizontalOptions="FillAndExpand" 
                 VerticalOptions="CenterAndExpand"
                 SemanticProperties.Description="dot net bot in a hovercraft number nine">
-                <Image.GestureRecognizers>
+       k         <Image.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                 </Image.GestureRecognizers>
         </Image>

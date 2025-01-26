@@ -4,6 +4,8 @@ using System.Diagnostics;
 using LukeMauiFilePicker;
 using MK.Services;
 using MK.Drawables;
+using SkiaSharp;
+
 
 
 
@@ -43,5 +45,27 @@ public partial class TestVision : ContentPage
 				Debug.WriteLine("Failed to display the image.");
 			}
     }
+
+	private async void TapGestureRecognizer_Tapped(System.Object sender, Microsoft.Maui.Controls.TappedEventArgs e)
+	{
+		// Position relative to the container view, that is the image, the origin point is at the top left of the image.
+		Point? relativeToContainerPosition = e.GetPosition((View)sender);
+		double rawX = relativeToContainerPosition.Value.X;
+		double rawY = relativeToContainerPosition.Value.Y;
+
+		foreach (var box in boundingBoxes){
+
+			if(rawY>box.Top && rawY<(box.Top+box.Height)){
+
+				if(rawX>box.Left && rawX<box.Left+box.Width){
+					Debug.WriteLine(box.Label);
+
+				}
+
+			}
+
+		}
+		
+	}
 	
 }
