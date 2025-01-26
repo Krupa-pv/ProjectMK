@@ -59,7 +59,6 @@ namespace MKBackend.Controllers
         public async Task<IActionResult> analyzeDefaultImage(IFormFile file){
 
             boxes.Clear();
-
             if (file == null || file.Length == 0)
             {
                 return BadRequest(new { error = "No file uploaded." });
