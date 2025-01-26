@@ -38,5 +38,7 @@
 	<string>The app requires microphone access for speech recognition.</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Light</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to the camera to take photos.</string>
 </dict>
 </plist>

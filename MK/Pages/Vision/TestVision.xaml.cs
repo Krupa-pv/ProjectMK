@@ -120,5 +120,25 @@ public partial class TestVision : ContentPage
 
 
 	}
+
+	private async void OnTakePhotoButtonClicked(object sender, EventArgs e)
+	{
+		var photo = await MediaPicker.CapturePhotoAsync(new MediaPickerOptions {
+			Title = "MyPhoto.jpg"
+		});
+
+		if (photo != null) {
+			// Copy photo to cache directory
+			var localFilePath = Path.Combine(FileSystem.CacheDirectory, photo.FileName);
+
+			using var sourceStream = await photo.OpenReadAsync();
+			using var localFileStream = File.OpenWrite(localFilePath);
+
+			await sourceStream.CopyToAsync(localFileStream);
+
+			// Display captured photo path in console
+			Console.WriteLine($@"Photo saved to : {localFilePath}");
+		}
+	}
 	
 }
