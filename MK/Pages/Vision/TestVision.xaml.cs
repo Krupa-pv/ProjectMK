@@ -3,7 +3,6 @@ namespace MK;
 using System.Diagnostics;
 using LukeMauiFilePicker;
 using MK.Services;
-using MK.Drawables;
 using SkiaSharp;
 
 
@@ -58,6 +57,8 @@ public partial class TestVision : ContentPage
 			if(rawY>box.Top && rawY<(box.Top+box.Height)){
 
 				if(rawX>box.Left && rawX<box.Left+box.Width){
+					ClickedWord.Text = box.Label;
+					ClickedWord.IsVisible = true;
 					Debug.WriteLine(box.Label);
 
 				}

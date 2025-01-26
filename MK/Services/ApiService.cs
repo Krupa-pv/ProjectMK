@@ -7,7 +7,6 @@ using MK.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers; // For MediaTypeHeaderValue
 using LukeMauiFilePicker;
-using MK.Drawables;
 
 
 
@@ -415,5 +414,14 @@ public class WordRequest{
         public string Interests { get; set; } 
         public string Difficulty { get; set; } 
         public List<string> TroubleWords { get; set; } // The trouble words of the user determined by wordspeak
+    }
+
+    public class BoundingBoxResult
+    {
+        public string Label { get; set; }
+        public float Left { get; set; }
+        public float Top { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
     }
 
