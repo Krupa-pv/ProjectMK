@@ -18,7 +18,7 @@ public partial class PracticePage : ContentPage
 	private async void OnReading(object sender, EventArgs e)
         {
             // Navigate to WordSpeakPage
-            //await Navigation.PushAsync(new TestVision(_apiService, picker));
+            await Navigation.PushAsync(new ReadPage(_apiService));
         }
 
         private async void OnPronunciation(object sender, EventArgs e)

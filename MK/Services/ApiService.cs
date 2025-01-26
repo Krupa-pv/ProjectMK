@@ -397,6 +397,29 @@ public class ApiService
         }
     }
 
+    public async Task<Tuple<string,string>> getTokenAndSubdomainAsync(){
+        
+        Debug.WriteLine("i am here");
+        var response = await _httpClient.GetAsync("api/immersivereader");
+        var content = "error";
+        Tuple<string,string> hi = new Tuple<string, string>("error","error");
+        if (response.IsSuccessStatusCode)
+            {
+                content = await response.Content.ReadAsStringAsync();
+                var jsonResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(content);
+                string token = jsonResponse.token;
+                string subdomain = jsonResponse.subdomain;
+                hi = new Tuple<string, string>(token,subdomain);
+
+            }
+        else{
+            Debug.WriteLine("failed");
+        }
+        return hi;
+        
+
+    }
+
 
     //class used to map the JSON response
     public class SpeechInfo
