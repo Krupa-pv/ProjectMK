@@ -3,35 +3,46 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MK.PracticePage"
              Title="Let's Practice!">
+              <Grid>
+        <Image Aspect="AspectFit" Source ="arctic_3.jpg" />
+        <!-- nested grid. OR StackLayout, etc. -->
+                <Grid >
    <StackLayout Padding="20" VerticalOptions="CenterAndExpand" Spacing="20">
         <!-- Header Label -->
         <Label Text="Choose Between Practicing Reading or Practicing Pronunciation!" 
+               Style="{StaticResource SubHeadline}"
+                SemanticProperties.HeadingLevel="Level1"
+                SemanticProperties.Description="Welcome to dot net Multi platform App U I" 
                Padding="20"
-               FontSize="20" 
                HorizontalOptions="Center"
-               FontAttributes="Bold"
-               TextColor="#555" />
+               FontAttributes="Bold" 
+               TextColor="{StaticResource SuperLightBlue}"/>
+                
                 
         <!-- Single Word Practice Button -->
         <Button Text="Practice Your Reading Skills"
+                Clicked="OnReading" 
                 VerticalOptions="Center"
                 HorizontalOptions="FillAndExpand"
-                Clicked="OnReading" 
                 BackgroundColor="#1E88E5"
                 TextColor="White"
+                FontSize="25" 
                 CornerRadius="10"
                 HeightRequest="100"
-                Margin = "10" />
+                Margin = "5" />
         
         <!-- Practice Stories Button -->
         <Button Text="Pracice Your Pronounciation"
-                VerticalOptions="Center"
+                Clicked="OnPronunciation" VerticalOptions="Center"
                 HorizontalOptions="FillAndExpand"
-                Clicked="OnPronunciation" 
                 BackgroundColor="#FF185B96"
                 TextColor="White"
+                FontSize="25" 
                 CornerRadius="10"
                 HeightRequest="100"
-                Margin = "10" />
+                Margin = "5"/>
     </StackLayout>
+    
+                </Grid>
+        </Grid>
 </ContentPage>

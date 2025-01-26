@@ -5,14 +5,10 @@
              Title="TestVision">
     <VerticalStackLayout x:Name = "Container">
         
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
         <Button Text="Test Photo Upload" Clicked="OnTakePhotoButtonClicked" />
         <Button Text="Test File Upload" Clicked="OnFileUpload" />
         <Image  x:Name="showSelect"
-                Source="dotnet_bot.png"
+                Source="penguin.png"
                 Aspect="AspectFit"
                 HeightRequest = "400"
                 VerticalOptions="Center"

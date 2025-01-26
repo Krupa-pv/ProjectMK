@@ -5,7 +5,7 @@
              Title="Speech Assessment">
     
     <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="15">
+        <VerticalStackLayout Padding="60" Spacing="15">
 
             <!-- Title -->
             <Label Text="Speech Assessment"
@@ -104,8 +104,8 @@
             </Frame>
 
             <!-- Feedback Section -->
-            <Frame BackgroundColor="White" CornerRadius="10" Padding="15" HasShadow="True">
-                <VerticalStackLayout Spacing="10">
+            <Frame BackgroundColor="White" CornerRadius="10" HasShadow="True">
+                <VerticalStackLayout Spacing="10" Margin="10">
                     <Label Text="Feedback"
                            FontSize="18"
                            FontAttributes="Bold"
