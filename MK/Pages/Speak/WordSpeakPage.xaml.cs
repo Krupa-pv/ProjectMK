@@ -28,8 +28,7 @@ public partial class WordSpeakPage : ContentPage
     private int _currentWordIndex;        // Index of the current word in the list
     private bool _isSessionActive; 
     private int _attemptCount;
-    private readonly string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR"; // Replace with your Azure Speech Key
-    private readonly string _speechRegion = "eastus";  
+      
 
 
     public WordSpeakPage(ApiService apiService, ISpeechToText speechToText)

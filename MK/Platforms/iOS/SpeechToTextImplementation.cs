@@ -15,8 +15,8 @@ namespace MK.Platforms.iOS{
 
     public class SpeechToTextImplementation : ISpeechToText
     {
-        private string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR";
-        private string _speechRegion = "eastus";
+        private string _speechKey;
+        private string _speechRegion ;
         private ApiService _apiService; 
         public string _recognizedWord;
     
