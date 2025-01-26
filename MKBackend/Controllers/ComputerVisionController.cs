@@ -85,7 +85,9 @@ namespace MKBackend.Controllers
                             Left = detectedObject.BoundingBox.X,
                             Top = detectedObject.BoundingBox.Y,
                             Width = detectedObject.BoundingBox.Width,
-                            Height = detectedObject.BoundingBox.Height
+                            Height = detectedObject.BoundingBox.Height,
+                            ImageWidth = result.Metadata.Width,
+                            ImageHeight = result.Metadata.Height
                         };
                         boxes.Add(boundingBox);
                     }
@@ -112,6 +114,9 @@ namespace MKBackend.Controllers
         public float Top { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
+        public float ImageWidth { get; set; }
+        public float ImageHeight { get; set; }
+
     }
 
 

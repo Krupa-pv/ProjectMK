@@ -14,8 +14,8 @@
         <Image  x:Name="showSelect"
                 Source="dotnet_bot.png"
                 Aspect="AspectFit"
-                HorizontalOptions="FillAndExpand" 
-                VerticalOptions="CenterAndExpand"
+                HeightRequest = "400"
+                VerticalOptions="Center"
                 SemanticProperties.Description="dot net bot in a hovercraft number nine">
                 <Image.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
@@ -23,10 +23,11 @@
         </Image>
 
          <Label x:Name = "ClickedWord"
-            Text="init"
+            Text=""
             VerticalOptions="Center" 
-            HorizontalOptions="Center"
-            IsVisible = "false" />
+            HorizontalOptions="Center" />
+
+
 
     </VerticalStackLayout>
 </ContentPage>

@@ -26,6 +26,8 @@ public partial class TestVision : ContentPage
 
 	}
 
+
+
 	private async void OnFileUpload(object sender, EventArgs e){
             ImageSource imageSource = await _apiService.uploadFileToBackend(picker);
 			if (imageSource != null)
@@ -51,6 +53,9 @@ public partial class TestVision : ContentPage
 		Point? relativeToContainerPosition = e.GetPosition((View)sender);
 		double rawX = relativeToContainerPosition.Value.X;
 		double rawY = relativeToContainerPosition.Value.Y;
+		TextToSpeechService tS = new TextToSpeechService(_apiService);
+
+		Debug.WriteLine("width: " + showSelect.Width + "height: " + showSelect.Height);
 
 		foreach (var box in boundingBoxes){
 
@@ -59,6 +64,7 @@ public partial class TestVision : ContentPage
 				if(rawX>box.Left && rawX<box.Left+box.Width){
 					ClickedWord.Text = box.Label;
 					ClickedWord.IsVisible = true;
+					tS.SpeakTextAsync(box.Label);
 					Debug.WriteLine(box.Label);
 
 				}

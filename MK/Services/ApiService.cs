@@ -423,5 +423,8 @@ public class WordRequest{
         public float Top { get; set; }
         public float Width { get; set; }
         public float Height { get; set; }
+
+        public float ImageWidth { get; set; }
+        public float ImageHeight { get; set; }
     }
 
