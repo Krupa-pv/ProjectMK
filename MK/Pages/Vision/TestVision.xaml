@@ -21,7 +21,7 @@
                 HorizontalOptions="FillAndExpand" 
                 VerticalOptions="CenterAndExpand"
                 SemanticProperties.Description="dot net bot in a hovercraft number nine">
-       k         <Image.GestureRecognizers>
+                <Image.GestureRecognizers>
                     <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
                 </Image.GestureRecognizers>
         </Image>

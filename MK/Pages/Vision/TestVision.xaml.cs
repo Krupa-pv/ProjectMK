@@ -19,11 +19,11 @@ public partial class TestVision : ContentPage
 	readonly IFilePickerService picker;
 
 
-	public TestVision(IFilePickerService picker)
+	public TestVision(ApiService apiService, IFilePickerService picker)
 	{
 		this.picker=picker;
 		InitializeComponent();
-		_apiService = new ApiService();
+		_apiService = apiService;
 
 	}
 

@@ -11,16 +11,16 @@
             <ShellContent Route="MainPage" ContentTemplate="{DataTemplate local:MainPage}" />
         </Tab>
         
-        <Tab Title="Speak" Icon="speak_icon.png">
-            <ShellContent Route="ISpeak" ContentTemplate="{DataTemplate local:ISpeak}" />
-        </Tab> 
-
-        <Tab Title="More" Icon="more_icon.png">
-            <ShellContent Route="UserInput" ContentTemplate="{DataTemplate local:UserInput}" />
+        <Tab Title ="Learn" Icon ="brain.png">
+            <ShellContent Route="LearnPage" ContentTemplate="{DataTemplate local:LearnPage}" />
         </Tab>
 
-        <Tab Title="Test" Icon="more_icon.png">
-            <ShellContent Route="TestVision" ContentTemplate="{DataTemplate local:TestVision}" />
+        <Tab Title = "Practice" Icon ="practice.png">
+            <ShellContent Route="PracticePage" ContentTemplate ="{DataTemplate local:PracticePage}"/>
+        </Tab>
+
+        <Tab Title="More" Icon="settings_icon.png">
+            <ShellContent Route="UserInput" ContentTemplate="{DataTemplate local:UserInput}" />
         </Tab>
     </TabBar>
 </Shell>

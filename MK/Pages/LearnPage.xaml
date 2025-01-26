@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MK.LearnPage"
+             Title="Let's Learn!">
+    <StackLayout Padding="20" VerticalOptions="CenterAndExpand" Spacing="20">
+        <!-- Header Label -->
+        <Label Text="Choose Between Learning Vocab or Learning Pronunciation!" 
+               Padding="20"
+               FontSize="20" 
+               HorizontalOptions="Center"
+               FontAttributes="Bold"
+               TextColor="#555" />
+                
+        <!-- Single Word Practice Button -->
+        <Button Text="Learn New Vocab"
+                VerticalOptions="Center"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnVocab" 
+                BackgroundColor="#1E88E5"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="100"
+                Margin = "10" />
+        
+        <!-- Practice Stories Button -->
+        <Button Text="Learn Pronunciation"
+                VerticalOptions="Center"
+                HorizontalOptions="FillAndExpand"
+                Clicked="OnPronunciation" 
+                BackgroundColor="#FF185B96"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="100"
+                Margin = "10" />
+    </StackLayout>
+</ContentPage>
