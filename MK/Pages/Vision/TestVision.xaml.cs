@@ -54,25 +54,71 @@ public partial class TestVision : ContentPage
 		double rawX = relativeToContainerPosition.Value.X;
 		double rawY = relativeToContainerPosition.Value.Y;
 		TextToSpeechService tS = new TextToSpeechService(_apiService);
+		float originalWidth = 0;
+		float originalHeight = 0;
+		double scale = 0;
+		if(boundingBoxes[0]!=null){
+			 originalWidth = boundingBoxes[0].ImageWidth;
+			 originalHeight = boundingBoxes[0].ImageHeight;
+			 scale = ((showSelect.Height)/(originalHeight));
+			 Debug.WriteLine("scale: "+ scale);
+		}
+		Debug.WriteLine("x: "+ rawX +"y: "+rawY);
 
-		Debug.WriteLine("width: " + showSelect.Width + "height: " + showSelect.Height);
+		string hi = null;
+
+		double pastDist = 1000000000;
+		//bowl: 719, 317
+		//person: 651, 195.626
 
 		foreach (var box in boundingBoxes){
 
-			if(rawY>box.Top && rawY<(box.Top+box.Height)){
+			double topC = box.Top*scale;
+			double leftC = (Container.Width-(scale*originalWidth))/2 + box.Left*scale;
+			double heightC = box.Height*scale;
+			double widthC = box.Width*scale;
 
-				if(rawX>box.Left && rawX<box.Left+box.Width){
-					ClickedWord.Text = box.Label;
-					ClickedWord.IsVisible = true;
-					tS.SpeakTextAsync(box.Label);
-					Debug.WriteLine(box.Label);
+
+			if(rawY>topC && rawY<(topC+heightC)){
+
+				if(rawX>leftC && rawX<(leftC+widthC)){
+
+
+					if(hi!=null){
+						double newDist = await calculateDistance(rawX,rawY, leftC, topC, leftC+widthC, topC+heightC);
+						if(newDist<pastDist){
+
+							pastDist = await calculateDistance(rawX,rawY, leftC, topC, leftC+widthC, topC+heightC);
+							hi = box.Label;
+
+						}
+					}
+					else{
+						pastDist = await calculateDistance(rawX,rawY, leftC, topC, leftC+widthC, topC+heightC);
+						hi = box.Label;
+					}
 
 				}
 
 			}
 
 		}
+
+		if(hi!=null){
+			ClickedWord.Text = hi;
+			tS.SpeakTextAsync(hi);
+		}
 		
+		
+	}
+
+	private async Task<double> calculateDistance(double x1,double y1, double xb1,double yb1,double xb2,double yb2){
+		double midBoxX = (xb2-xb1)/2+xb1;
+		double midBoxY = (yb2-yb1)/2+yb1;
+
+		return Math.Sqrt(((x1-midBoxX)*(x1-midBoxX))+((y1-midBoxY)*(y1-midBoxY)));
+
+
 	}
 	
 }
