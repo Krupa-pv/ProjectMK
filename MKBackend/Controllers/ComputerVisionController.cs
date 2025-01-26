@@ -17,62 +17,80 @@ namespace MKBackend.Controllers
     {
 
         ImageAnalysisClient client;
+        public static List<BoundingBoxResult> boxes = new List<BoundingBoxResult>();
 
-public ComputerVisionController(Microsoft.Extensions.Configuration.IConfiguration configuration){
+        public ComputerVisionController(Microsoft.Extensions.Configuration.IConfiguration configuration){
 
             string endpoint = configuration["CVEndpoint"];
             string key = configuration["CVKey"];
 
-
-            //string endpoint = "https://elexircv.cognitiveservices.azure.com/";
-            //string key = "9ZwSLUi6C4JFj77KNdfJY5sjdHG4xXoAIWxrbJdNcSONGfcoe79hJQQJ99BAACYeBjFXJ3w3AAAFACOGsVNQ";
 
             // Create an Image Analysis client.
             client = new ImageAnalysisClient(new Uri(endpoint), new AzureKeyCredential(key));
 
         }
 
+        [HttpGet("boxes")]
+        public async Task<IActionResult> GetBoundingBoxes()
+        {
+            Console.WriteLine("so the get call to backend is initiated");
+            try{
+                if (boxes == null || !boxes.Any())
+                        {
+                            Console.WriteLine("No bounding boxes found.");
+                            return NotFound(new { Error = "No bounding boxes available." });
+                        }
+
+                        // Log the contents of the bounding boxes (just to check if the data is correct)
+                        foreach (var box in boxes)
+                        {
+                            Console.WriteLine($"Label: {box.Label}, Left: {box.Left}, Top: {box.Top}, Width: {box.Width}, Height: {box.Height}");
+                        }                
+                return Ok(boxes);
+            }
+            catch(Exception ex){
+
+                return NotFound(new { Error = ex.Message });
+            }
+
+        }
+
         [HttpPost("analyze")]
         public async Task<IActionResult> analyzeDefaultImage(IFormFile file){
 
-            Console.WriteLine("boi we in da backkkk");
+            boxes.Clear();
+
             if (file == null || file.Length == 0)
             {
-                Console.WriteLine("the fle is null....");
                 return BadRequest(new { error = "No file uploaded." });
             }
 
             try{
             using (var stream = file.OpenReadStream())
             {    
-
                 // Get the tags for the image.
                 ImageAnalysisResult result = client.Analyze(
                     BinaryData.FromStream(stream),
                     VisualFeatures.Objects);
-                    
-
                 // Print object detection results to the console
                 Console.WriteLine($"Image analysis results:");
                 Console.WriteLine($" Metadata: Model: {result.ModelVersion} Image dimensions: {result.Metadata.Width} x {result.Metadata.Height}");
                 // Check for each object and ensure it's not null before accessing properties
                     foreach (var detectedObject in result.Objects.Values)
                     {
-                        if (detectedObject == null)
-                        {
-                            Console.WriteLine("Detected object is null.");
-                            continue; // Skip this object and move to the next one
-                        }
-
-                        if (detectedObject.Tags == null || !detectedObject.Tags.Any())
-                        {
-                            Console.WriteLine("Detected object has no tags.");
-                            continue;
-                        }
 
                         Console.WriteLine($"Object: '{detectedObject.Tags.First().Name}', Bounding box: {detectedObject.BoundingBox}");
+                        var boundingBox = new BoundingBoxResult
+                        {
+                            Label = detectedObject.Tags.First().Name,
+                            Left = detectedObject.BoundingBox.X,
+                            Top = detectedObject.BoundingBox.Y,
+                            Width = detectedObject.BoundingBox.Width,
+                            Height = detectedObject.BoundingBox.Height
+                        };
+                        boxes.Add(boundingBox);
                     }
-                    return Ok(new { message = "Feedback saved successfully!" });
+                    return Ok(boxes);
             }
  
             }
@@ -87,4 +105,15 @@ public ComputerVisionController(Microsoft.Extensions.Configuration.IConfiguratio
         }
         
     }
+
+    public class BoundingBoxResult
+    {
+        public string Label { get; set; }
+        public float Left { get; set; }
+        public float Top { get; set; }
+        public float Width { get; set; }
+        public float Height { get; set; }
+    }
+
+
 }

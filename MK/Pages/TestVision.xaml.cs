@@ -1,11 +1,16 @@
 namespace MK;
+
+using System.Diagnostics;
 using LukeMauiFilePicker;
 using MK.Services;
+using MK.Drawables;
+
 
 
 
 public partial class TestVision : ContentPage
 {
+	private List<BoundingBoxResult> boundingBoxes;
 
 	private readonly ApiService _apiService;
 
@@ -21,8 +26,22 @@ public partial class TestVision : ContentPage
 	}
 
 	private async void OnFileUpload(object sender, EventArgs e){
-            Image post = await _apiService.uploadFileToBackend(picker);
+            ImageSource imageSource = await _apiService.uploadFileToBackend(picker);
+			if (imageSource != null)
+			{
+				showSelect.Source = imageSource; // Set the ImageSource for the image control
+				boundingBoxes = await _apiService.getBoxes();
 
+				Debug.WriteLine($"Bounding boxes count: {boundingBoxes.Count}");
+				foreach (var box in boundingBoxes)
+				{
+					Debug.WriteLine($"Label: {box.Label}, Left: {box.Left}, Top: {box.Top}, Width: {box.Width}, Height: {box.Height}");
+				}
+			}
+			else
+			{
+				Debug.WriteLine("Failed to display the image.");
+			}
     }
 	
 }

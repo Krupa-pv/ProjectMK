@@ -7,6 +7,8 @@ using MK.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers; // For MediaTypeHeaderValue
 using LukeMauiFilePicker;
+using MK.Drawables;
+
 
 
 
@@ -282,33 +284,17 @@ public class ApiService
     }
 
 
-    public async Task<Image> uploadFileToBackend (IFilePickerService picker){
+    public async Task<ImageSource> uploadFileToBackend (IFilePickerService picker){
         try
         {   
-            Debug.WriteLine("this pmo");
             var file = await picker.PickFileAsync("Select a file", FileType); 
             if(file!=null){
-                Debug.WriteLine("file is indeed not null");
+
+                var imageStream = await file.OpenReadAsync();
+                var imageSource = ImageSource.FromStream(() => imageStream);
+
+
                 var fileStream = await file.OpenReadAsync();
-
-                var imageSource = ImageSource.FromStream(() => fileStream);
-
-                Image imageControl = new Image
-                {
-                    Source = imageSource,
-                    Aspect = Aspect.AspectFit // Set Aspect mode as needed (AspectFit, AspectFill, etc.)
-                };
-
-                //MyLayout.Children.Add(imageControl);
-
-                /*
-                Image image = new Image
-                {
-                    Source = ImageSource.FromStream(() => fileStream)
-                };
-                */
-
-
                 var fileExtension = Path.GetExtension(file.FileName).ToLower();
                 string contentType = "application/octet-stream"; // Default value
 
@@ -330,7 +316,6 @@ public class ApiService
                 }
                 var content = new MultipartFormDataContent();
                 var streamContent = new StreamContent(fileStream);
-
                 streamContent.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
                 // Step 5: Add the file to the content (file name must match the backend's parameter name)
@@ -342,7 +327,7 @@ public class ApiService
                 if (response.IsSuccessStatusCode)
                 {
                     Debug.WriteLine("File uploaded successfully!");
-                    return imageControl;
+                    return imageSource;
                 }
                 else
                 {
@@ -356,9 +341,34 @@ public class ApiService
 
         }
         catch(Exception ex){
+            Debug.WriteLine($"Error: {ex.Message}");
             return null;
         }
 
+    }
+
+    public async Task<List<BoundingBoxResult>> getBoxes(){
+
+        try{
+
+            Debug.WriteLine("came to the api client!");
+
+            var response = await _httpClient.GetAsync($"api/computervision/boxes");
+
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<List<BoundingBoxResult>>();
+            }
+            return new List<BoundingBoxResult>();
+
+
+        }
+        catch(Exception ex){
+            Debug.WriteLine("got caught");
+            Debug.WriteLine($"Error: {ex.Message}");
+            return new List<BoundingBoxResult>();
+        }
     }
 
 
@@ -372,3 +382,4 @@ public class WordRequest{
         public string Difficulty { get; set; } 
         public List<string> TroubleWords { get; set; } // The trouble words of the user determined by wordspeak
     }
+

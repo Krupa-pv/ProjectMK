@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:drawable="clr-namespace:MK.Drawables"
              x:Class="MK.TestVision"
              Title="TestVision">
+    <ContentPage.Resources>
+        <drawable:BoundingBoxDrawable x:Key="drawable" />
+    </ContentPage.Resources>
     <VerticalStackLayout>
         
         <Label 
@@ -11,6 +15,22 @@
             HorizontalOptions="Center" />
 
         <Button Text="Test File Upload" Clicked="OnFileUpload" />
+        <Image  x:Name="showSelect"
+                Source="dotnet_bot.png"
+                Aspect="AspectFit"
+                HorizontalOptions="FillAndExpand" 
+                VerticalOptions="CenterAndExpand"
+                SemanticProperties.Description="dot net bot in a hovercraft number nine">
+                <Image.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped"/>
+                </Image.GestureRecognizers>
+        </Image>
+
+
+        <GraphicsView x:Name="BoundingBoxView" 
+                    HeightRequest= "300"
+                    WidthRequest="400"
+                  Drawable="{StaticResource drawable}" />
 
 
     </VerticalStackLayout>
