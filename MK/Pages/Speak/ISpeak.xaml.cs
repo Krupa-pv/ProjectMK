@@ -18,19 +18,22 @@ public partial class ISpeak : ContentPage
 {
     private readonly ApiService _apiService;
     private readonly ISpeechToText _speechToText;
-    public ISpeak(ApiService apiService, ISpeechToText speechToText)
+    private readonly TextToSpeechService _TTS;
+    
+    public ISpeak(ApiService apiService, ISpeechToText speechToText, TextToSpeechService tts)
     {
         Debug.WriteLine("Navigating to speech page");
         InitializeComponent();
         _apiService = apiService;
         _speechToText = speechToText;
+        _TTS = tts;
     }
 
     private async void OnWordSpeakClicked(object sender, EventArgs e)
         {
             // Navigate to WordSpeakPage
             Debug.WriteLine("Navigating to word page");
-            await Navigation.PushAsync(new WordSpeakPage(_apiService, _speechToText));
+            await Navigation.PushAsync(new WordSpeakPage(_apiService, _speechToText, _TTS));
         }
 
         private async void OnSpeechPageClicked(object sender, EventArgs e)

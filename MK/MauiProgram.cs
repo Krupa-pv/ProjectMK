@@ -31,6 +31,7 @@ public static class MauiProgram
         // Registering the audio service from Plugin.Maui.Audio
         builder.Services.AddSingleton<IAudioManager, AudioManager>();
         builder.Services.AddSingleton<ApiService>();
+        builder.Services.AddSingleton<TextToSpeechService>();
 
         /*var assembly = Assembly.GetExecutingAssembly();
         using var stream = assembly.GetManifestResourceStream("MK.appsettings.json");

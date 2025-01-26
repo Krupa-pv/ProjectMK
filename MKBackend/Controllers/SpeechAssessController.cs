@@ -58,6 +58,7 @@ namespace MKBackend.Controllers
                 string _speechKey = _configuration["_speechKey"];
                 string _speechRegion = _configuration["_speechRegion"];
 
+
                 return new JsonResult(new {key = _speechKey, region = _speechRegion});
 
             }

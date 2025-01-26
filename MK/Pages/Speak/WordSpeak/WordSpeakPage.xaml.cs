@@ -19,6 +19,7 @@ public partial class WordSpeakPage : ContentPage
     private readonly ApiService _apiService;
     private readonly ISpeechToText _speechToText;
     private CancellationTokenSource _cancellationTokenSource;
+    private TextToSpeechService _TTS;
     private string _userId;
     
     private string _currentWord;
@@ -31,7 +32,7 @@ public partial class WordSpeakPage : ContentPage
       
 
 
-    public WordSpeakPage(ApiService apiService, ISpeechToText speechToText)
+    public WordSpeakPage(ApiService apiService, ISpeechToText speechToText, TextToSpeechService tts)
     {
         InitializeComponent();
         _apiService = apiService;
@@ -49,6 +50,7 @@ public partial class WordSpeakPage : ContentPage
         _currentWordIndex = 0;
         _attemptTracker.AttemptCount = 1;
         _isSessionActive = false;
+        _TTS = tts;
     }
     // Generate words based on user input
     private async void OnGenerateWordClicked(object sender, EventArgs e)
@@ -75,18 +77,25 @@ public partial class WordSpeakPage : ContentPage
 
             
             _currentWordIndex = 0;
-            _isSessionActive = true;
+            
 
+                StartRecordingButton.IsEnabled = false;
                 WordLabel.Text = $"Practice this word: {_generatedWords[_currentWordIndex]}";
+                //await SpeakFeedback($"The word to practice is {_currentWord}. Click Start Recording when you are ready.");
                 FeedbackLabel.Text = "Click Start Recording when you are ready to practice!";
+                
                 _currentWord = _generatedWords[_currentWordIndex];
                 StartRecordingButton.IsEnabled = true;
+                _isSessionActive = true;
+                
             }
             else
             {
                 WordLabel.Text = "No words generated.";
+                //SpeakFeedback("No words were generated. Please try again.");
                 _generatedWords = new List<string>();
                 StartRecordingButton.IsEnabled = false;
+                
             }
         }
         catch (Exception ex)
@@ -94,6 +103,10 @@ public partial class WordSpeakPage : ContentPage
             Debug.WriteLine($"Error generating words: {ex.Message}");
             await DisplayAlert("Error", "Failed to generate words.", "OK");
             StartRecordingButton.IsEnabled = false;
+            
+            //SpeakFeedback("An error occurred while generating words. Please try again.");
+
+        
         }
     }
 
@@ -107,6 +120,7 @@ public partial class WordSpeakPage : ContentPage
 
 private async void OnStartRecordingClicked(object sender, EventArgs e)
 {
+
     if (_attemptTracker.AttemptCount > 3)
     {
         MainThread.BeginInvokeOnMainThread(() =>
@@ -165,31 +179,38 @@ private async void OnStartRecordingClicked(object sender, EventArgs e)
 
         if (success)
         {
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 FeedbackLabel.Text = "Correct! Moving to the next word.";
+                
             });
             Debug.WriteLine("Correct word recognized. Moving to the next word.");
-            await MoveToNextWordAsync(_attemptTracker); // Reset tracker for the next word
+            await SpeakFeedback("Great job! You said the word correctly. Moving to the next word.");
+            await MoveToNextWordAsync(_attemptTracker);
         }
         else if (_attemptTracker.AttemptCount > 3)
         {
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 FeedbackLabel.Text = "Maximum attempts reached. Moving to the next word.";
+            
             });
             Debug.WriteLine("Exceeded maximum attempts. Moving to the next word.");
+            await SpeakFeedback($"You have reached the maximum attempts. Moving to the next word: {_currentWord}.");
             await SaveTroubleWordAsync(_currentWord);
             await MoveToNextWordAsync(_attemptTracker);
         }
         else
         {
-            MainThread.BeginInvokeOnMainThread(() =>
+            MainThread.BeginInvokeOnMainThread(async () =>
             {
                 FeedbackLabel.Text = $"Incorrect. Attempt {_attemptTracker.AttemptCount - 1} of 3. Try again!";
+                
             });
             Debug.WriteLine($"Incorrect attempt {_attemptTracker.AttemptCount - 1}.");
+            await SpeakFeedback($"Incorrect. Try again. Say the word {_currentWord}.");
         }
+
     }
     catch (Exception ex)
     {
@@ -247,6 +268,7 @@ private async Task MoveToNextWordAsync(AttemptTracker attemptTracker)
         _currentWord = _generatedWords[_currentWordIndex];
         WordLabel.Text = $"Practice this word: {_currentWord}";
         FeedbackLabel.Text = "Click Start Recording to begin practicing!";
+        //SpeakFeedback($"Practice this word: {_currentWord}. Click Start Recording when you are ready.");
         StartRecordingButton.IsEnabled = true; // Enable button for new word
     }
     else
@@ -254,6 +276,7 @@ private async Task MoveToNextWordAsync(AttemptTracker attemptTracker)
         _isSessionActive = false;
         WordLabel.Text = "All words completed!";
         FeedbackLabel.Text = "Great job! You've completed all the words.";
+        //SpeakFeedback("Great job! You have completed all the words in this session.");
         StartRecordingButton.IsEnabled = false; // Disable button after completion
     }
 
@@ -278,6 +301,21 @@ private void OnStopRecordingClicked(object sender, EventArgs e)
     FeedbackLabel.Text = "Recording stopped. You can start again or generate new words.";
     WordLabel.Text = "Ready to start again.";
 }
+
+
+private async Task SpeakFeedback(string message)
+{
+    try
+    {
+        await _TTS.SpeakTextAsync(message); // Ensure this is properly awaited
+    }
+    catch (Exception ex)
+    {
+        Debug.WriteLine($"TTS Error: {ex.Message}");
+    }
+}
+
+
 
 
 

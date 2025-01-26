@@ -34,14 +34,16 @@ namespace MK;
 
 
 
+        Task<string> Listen(CultureInfo culture, 
+        IProgress<string> recognitionResult, 
+        CancellationToken cancellationToken);
+        
         Task<PronunciationAssessmentResult> AssessPronunciation(
             CultureInfo culture,
             string referenceText,
             IProgress<string> recognitionResult,
             CancellationToken cancellationToken);
-        
-
-        
+      
     }
 
 

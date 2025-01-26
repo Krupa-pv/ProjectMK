@@ -11,8 +11,6 @@ using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.PronunciationAssessment;
 using System.Text.Json;
-using LukeMauiFilePicker;
-
 
 namespace MK;
 
@@ -22,8 +20,6 @@ public partial class SpeechPage : ContentPage
     private readonly ISpeechToText _speechToText;
     private CancellationTokenSource _cancellationTokenSource;
     private string _userId;
-
-
 
     public SpeechPage(ApiService apiService, ISpeechToText speechToText)
     {
@@ -117,13 +113,10 @@ public partial class SpeechPage : ContentPage
                 Timestamp = DateTime.UtcNow
             };
 
-            
             var success = await _apiService.SaveSpeechFeedbackAsync(_userId, feedback);
             Debug.WriteLine(success ? "Feedback saved successfully!" : "Failed to save feedback.");
 
-            //FeedbackLabel.Text = "Recording complete. Feedback saved.";
-            FeedbackLabel.Text = $"Your Accuracy: {feedback.AccuracyScore} \nYour Fluency: {feedback.FluencyScore}";
-
+            FeedbackLabel.Text = ($"Recording complete. Feedback saved. You had a score of:\n Accuracy: {feedback.AccuracyScore}\n Fluency: {feedback.FluencyScore} ");
         }
         else
         {
@@ -175,7 +168,4 @@ private void OnStopRecordingClicked(object sender, EventArgs e)
 
 
 
-
-
 }
-

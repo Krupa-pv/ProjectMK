@@ -15,28 +15,21 @@ namespace MK.Platforms.iOS{
 
     public class SpeechToTextImplementation : ISpeechToText
     {
-        private string _speechKey;
-        private string _speechRegion ;
         private ApiService _apiService; 
         public string _recognizedWord;
+        private string _speechKey;
+        private string _speechRegion;
     
 
         public SpeechToTextImplementation( ApiService apiService)
         {
             _apiService = apiService;
-           // InitializeSpeechSettingsAsync().GetAwaiter().GetResult();
         }
-
-        /*private async Task InitializeSpeechSettingsAsync()
-        {
-            var speechinfo = await _apiService.GetSpeechInfo();
-
-            _speechKey = speechinfo.SpeechKey;
-            _speechRegion = speechinfo.SpeechRegion;
-        }*/
 
         public async Task<bool> RequestPermissions()
         {
+            Debug.WriteLine("hai2");
+
             try
             {
                 var status = await Permissions.RequestAsync<Permissions.Microphone>();
@@ -59,198 +52,6 @@ namespace MK.Platforms.iOS{
             }
         }
 
-        
-  
- public async Task<(string RecognizedText, AudioConfig AudioConfig)> Listen(
-    CultureInfo culture,
-    IProgress<string> recognitionResult,
-    CancellationToken cancellationToken)
-{
-    var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
-    speechConfig.SpeechRecognitionLanguage = culture.Name;
-
-    var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
-    using var recognizer = new SpeechRecognizer(speechConfig, audioConfig);
-
-    var tcs = new TaskCompletionSource<string>();
-
-    recognizer.Recognizing += (s, e) =>
-    {
-        if (e.Result.Reason == ResultReason.RecognizingSpeech)
-        {
-            recognitionResult.Report(e.Result.Text);
-        }
-    };
-
-    recognizer.Recognized += (s, e) =>
-    {
-        if (e.Result.Reason == ResultReason.RecognizedSpeech)
-        {
-            var recognizedText = e.Result.Text.Replace(".", "").Replace(",", "").Trim();
-            //Debug.WriteLine($"Recognized Speech: {recognizedText}");
-            tcs.TrySetResult(recognizedText);
-        }
-        else
-        {
-            Debug.WriteLine("No match found.");
-            tcs.TrySetResult(string.Empty);
-        }
-    };
-
-    recognizer.Canceled += (s, e) =>
-    {
-        Debug.WriteLine($"Recognition canceled. Reason: {e.Reason}");
-        tcs.TrySetResult(string.Empty);
-    };
-
-    try
-    {
-        await recognizer.StartContinuousRecognitionAsync();
-        using (cancellationToken.Register(() => tcs.TrySetCanceled()))
-        {
-            var recognizedText = await tcs.Task;
-            return (recognizedText, audioConfig);
-        }
-    }
-    finally
-    {
-        await recognizer.StopContinuousRecognitionAsync();
-    }
-}
-    
-
-
-
-    /*public async Task<bool> ListenAndAssessAsync(
-        string expectedWord,
-        CultureInfo culture,
-        Action<string> updateFeedback,
-        Action<bool> updateButtonState,
-        CancellationToken cancellationToken)
-    {
-        try
-        {
-            Debug.WriteLine("Initializing speech recognition...");
-            Debug.WriteLine($"Expected Word: {expectedWord}");
-            Debug.WriteLine($"Culture: {culture.Name}");
-
-            // Configure speech service
-            var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
-            speechConfig.SpeechRecognitionLanguage = culture.Name;
-            speechConfig.OutputFormat = OutputFormat.Detailed; // Enable detailed output
-            speechConfig.SetProperty("SPEECH-SDK-INITIAL-SILENCE-THRESHOLD-MS", "5000"); // 5 seconds
-            speechConfig.SetProperty("SPEECH-SDK-END-OF-SPEECH-TIMEOUT-MS", "2000");     // 2 seconds
-
-            Debug.WriteLine("Speech configuration initialized.");
-
-            // Configure pronunciation assessment
-            var pronunciationConfig = new PronunciationAssessmentConfig(
-                expectedWord.Trim(),
-                GradingSystem.HundredMark,
-                Granularity.Phoneme,
-                enableMiscue: true);
-
-            Debug.WriteLine("Pronunciation assessment configuration created.");
-
-            using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
-            using var recognizer = new SpeechRecognizer(speechConfig, audioConfig);
-
-            Debug.WriteLine("Audio and speech recognizer initialized.");
-
-            // Apply pronunciation configuration
-            pronunciationConfig.ApplyTo(recognizer);
-            Debug.WriteLine("Pronunciation configuration applied to recognizer.");
-
-            // Debug partial results
-            recognizer.Recognizing += (s, e) =>
-            {
-                if (e.Result.Reason == ResultReason.RecognizingSpeech)
-                {
-                Debug.WriteLine($"Final Recognized Result: {e.Result.Text}, Confidence: {e.Result.Confidence}");                    updateFeedback($"Listening... Partial: {e.Result.Text}");
-                }
-            };
-
-            // Debug recognized results
-            recognizer.Recognized += (s, e) =>
-            {
-                if (e.Result.Reason == ResultReason.RecognizedSpeech)
-                {
-                    Debug.WriteLine($"Final Recognized Result: {e.Result.Text}");
-                }
-            };
-
-            updateFeedback("Listening...");
-            Debug.WriteLine("Listening started for pronunciation assessment.");
-
-            // Start recognition
-            var result = await recognizer.RecognizeOnceAsync();
-            Debug.WriteLine("Recognition completed. Processing result...");
-
-            // Handle result
-            if (result.Reason == ResultReason.RecognizedSpeech)
-            {
-                var recognizedText = result.Text.Trim();
-                Debug.WriteLine($"Recognized Speech: {recognizedText}");
-                Debug.WriteLine($"Matching recognized speech with expected word: {expectedWord}");
-
-                updateFeedback($"Recognized Speech: {recognizedText}");
-
-                // Pronunciation assessment result
-                var assessmentResult = PronunciationAssessmentResult.FromResult(result);
-                if (assessmentResult != null)
-                {
-                    Debug.WriteLine("Pronunciation Assessment Results:");
-                    Debug.WriteLine($"Accuracy: {assessmentResult.AccuracyScore}");
-                    Debug.WriteLine($"Fluency: {assessmentResult.FluencyScore}");
-                    Debug.WriteLine($"Completeness: {assessmentResult.CompletenessScore}");
-
-                    updateFeedback($"Accuracy: {assessmentResult.AccuracyScore}, Fluency: {assessmentResult.FluencyScore}, Completeness: {assessmentResult.CompletenessScore}");
-                    return true;
-                }
-                else
-                {
-                    Debug.WriteLine("Pronunciation assessment result is null.");
-                    updateFeedback("Pronunciation assessment failed. Please try again.");
-                    return false;
-                }
-            }
-            else if (result.Reason == ResultReason.NoMatch)
-            {
-                Debug.WriteLine("No match found for speech recognition.");
-                var noMatchDetails = NoMatchDetails.FromResult(result);
-                Debug.WriteLine($"NoMatch Details: {noMatchDetails.Reason}");
-                updateFeedback("No match found. Please try again.");
-                return false;
-            }
-            else if (result.Reason == ResultReason.Canceled)
-            {
-                var cancellation = CancellationDetails.FromResult(result);
-                Debug.WriteLine($"Speech recognition canceled: {cancellation.Reason}");
-                updateFeedback($"Listening canceled: {cancellation.Reason}");
-                return false;
-            }
-
-            return false;
-        }
-        catch (OperationCanceledException)
-        {
-            Debug.WriteLine("Speech recognition canceled due to timeout or user cancellation.");
-            updateFeedback("Listening timed out. Please try again.");
-            return false;
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Error during speech recognition: {ex.Message}");
-            updateFeedback($"An error occurred: {ex.Message}");
-            return false;
-        }
-        finally
-        {
-            updateButtonState(true); // Re-enable the Start Recording button
-            Debug.WriteLine("Listening operation completed.");
-        }
-    }*/
-
     public async Task<bool> ListenAndAssessAsync(
     string expectedWord,
     CultureInfo culture,
@@ -267,6 +68,10 @@ namespace MK.Platforms.iOS{
         Debug.WriteLine($"Attempt Number: {attemptTracker.AttemptCount}");
 
         // Configure speech service
+        var response = await _apiService.GetSpeechInfo();
+
+        _speechKey = response.Item1;
+        _speechRegion = response.Item2;
         var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
         speechConfig.SpeechRecognitionLanguage = culture.Name;
         speechConfig.OutputFormat = OutputFormat.Detailed; // Enable detailed output
@@ -419,7 +224,12 @@ public async Task<PronunciationAssessmentResult> DiscreteAssessPronunciation(
         return null;
     }
 
-    var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
+    var response = await _apiService.GetSpeechInfo();
+
+    string speechKey = response.Item1;
+    string speechRegion = response.Item2;
+
+    var speechConfig = SpeechConfig.FromSubscription(speechKey, speechRegion);
     speechConfig.SpeechRecognitionLanguage = culture.Name;
 
     var pronunciationConfig = new PronunciationAssessmentConfig(
@@ -477,17 +287,65 @@ public async Task<PronunciationAssessmentResult> DiscreteAssessPronunciation(
     }
 }
 
+public async Task<string> Listen(CultureInfo culture, IProgress<string> recognitionResult, CancellationToken cancellationToken)
+        {
+            if (!await RequestPermissions())
+            {
+                throw new InvalidOperationException("Microphone permissions are required.");
+            }
 
 
+            var response = await _apiService.GetSpeechInfo();
+            _speechKey = response.Item1;
+            _speechRegion = response.Item2;
+            
+            var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
+            speechConfig.SpeechRecognitionLanguage = culture.Name;
 
+            using var audioConfig = AudioConfig.FromDefaultMicrophoneInput();
+            using var recognizer = new SpeechRecognizer(speechConfig, audioConfig);
 
-    public async Task<PronunciationAssessmentResult> AssessPronunciation(
+            string recognizedText = string.Empty;
+
+            recognizer.Recognizing += (s, e) =>
+            {
+                recognitionResult.Report(e.Result.Text);
+            };
+
+            recognizer.Recognized += (s, e) =>
+            {
+                recognizedText = e.Result.Text;
+            };
+
+            await recognizer.StartContinuousRecognitionAsync();
+
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    await Task.Delay(200);
+                }
+            }
+            finally
+            {
+                await recognizer.StopContinuousRecognitionAsync();
+            }
+
+            return recognizedText;
+        }
+
+        public async Task<PronunciationAssessmentResult> AssessPronunciation(
             CultureInfo culture,
             string referenceText,
             IProgress<string> recognitionResult,
             CancellationToken cancellationToken)
         {
             Debug.WriteLine($"Pronunciation Assessed here");
+            var response = await _apiService.GetSpeechInfo();
+
+            string _speechKey = response.Item1;
+            string _speechRegion = response.Item2;
+            Debug.WriteLine($"key {_speechKey} and region {_speechRegion}");
             var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
             speechConfig.SpeechRecognitionLanguage = culture.Name;
 
@@ -536,5 +394,8 @@ public async Task<PronunciationAssessmentResult> DiscreteAssessPronunciation(
 
             return assessmentResult;
         }
-}
+
+        
+
+    }
 }

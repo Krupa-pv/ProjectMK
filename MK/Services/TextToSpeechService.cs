@@ -35,7 +35,7 @@ public class TextToSpeechService
             string _speechKey = response.Item1;
             string _speechRegion = response.Item2;
             var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
-            speechConfig.SpeechSynthesisVoiceName = "en-US-AvaMultilingualNeural";
+            speechConfig.SpeechSynthesisVoiceName = "en-US-SerenaMultilingualNeural";
 
             using (var speechSynthesizer = new SpeechSynthesizer(speechConfig))
             {
