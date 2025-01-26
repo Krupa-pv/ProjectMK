@@ -9,8 +9,8 @@ namespace MK.Services;
 public class TextToSpeechService 
 {
     private readonly ApiService _apiService;
-    private string _speechKey = "6p0SyYUApqwf9BSJ6MrqvuGP08yWOuig18Kc8cfX0btiAnd7dQm8JQQJ99BAACYeBjFXJ3w3AAAYACOGYUIR";
-    private string _speechRegion = "eastus";
+    private string _speechKey;
+    private string _speechRegion;
 
     public TextToSpeechService(ApiService apiService)
     {
@@ -31,6 +31,9 @@ public class TextToSpeechService
 
     public async Task SpeakTextAsync(string text)
         {
+            var response = await _apiService.GetSpeechInfo();
+            string _speechKey = response.Item1;
+            string _speechRegion = response.Item2;
             var speechConfig = SpeechConfig.FromSubscription(_speechKey, _speechRegion);
             speechConfig.SpeechSynthesisVoiceName = "en-US-AvaMultilingualNeural";
 
