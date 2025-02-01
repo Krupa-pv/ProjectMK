@@ -18,7 +18,8 @@ public class User
     public List<TroubleWord> TroubleWords { get; set; } = new List<TroubleWord>();    
     //configure later when time
     //public DateTime LastSpeechPracticeDate { get; set; }
-    
+        public List<int> ReadingScores { get; set; } = new List<int>();
+
 
    
 }

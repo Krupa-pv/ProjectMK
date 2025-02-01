@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Cosmos;
 using Microsoft.Identity.Client;
+using ModelsUser = MKBackend.Models.User;
+
 
 
 namespace MKBackend.Controllers
@@ -84,7 +86,6 @@ namespace MKBackend.Controllers
         public async Task<JsonResult> GetTokenAndSubdomain()
         {
 
-            Console.WriteLine("gettng tokensubdomain");
 
             try
             {
@@ -100,6 +101,83 @@ namespace MKBackend.Controllers
             }
         }
 
+        [HttpPost("saveScore")]
+        public async Task<IActionResult> SaveScore ([FromBody] SaveScoreRequest request)
+        {
+            string userId = request.UserId;
+            int score = request.Score;
+            try
+            {
+                Console.WriteLine(score);
+                var userResponse = await _container.ReadItemAsync<ModelsUser>(userId, new PartitionKey(userId));
+                var user = userResponse.Resource;
+                user.ReadingScores ??= new List<int>();
+                user.ReadingScores.Add(score);
+                List<int> scores = user.ReadingScores;
+                int countBadScores = 0;
+                int countGoodScores = 0;
+                int currentIndex = scores.Count-1;
+                int loops = 0;
+                bool inRow = true;
+
+                while(currentIndex>=0 && loops<5){
+                    if(scores[currentIndex]<4 && loops<3 && inRow){
+                        countBadScores++;
+                    }
+                    else if(scores[currentIndex]>=4){
+                        countGoodScores++;
+                        inRow = false;
+                    }
+                    loops++;
+                    currentIndex--;
+                }
+                for(int i = 0; i < scores.Count;i++){
+                    Console.WriteLine(scores[i]);
+                }
+                Console.WriteLine(countBadScores+" bad scores");
+                Console.WriteLine(countGoodScores+" good scores");
+                List<string> levels = new List<string>();
+                levels.Add("Early Reader");
+                levels.Add("Intermediate (Simple Chapters)");
+                levels.Add("Advanced (Full Chapter Books)");
+                levels.Add("Young Adult (Complex Plots)");
+                if(countBadScores>=3){
+                    string readingLevel = user.ReadingLevel;
+                    Console.WriteLine("old level: "+readingLevel);
+                    int index = levels.IndexOf(readingLevel);
+                    if(index!=0){
+                        index--;
+                    }
+                    Console.WriteLine("new level: "+levels[index]);
+                    user.ReadingLevel = levels[index];
+                }
+                else if(countGoodScores>=5){
+                    string readingLevel = user.ReadingLevel;
+                    Console.WriteLine("old level: "+readingLevel);
+                    int index = levels.IndexOf(readingLevel);
+                    if(index!=3){
+                        index++;
+                    }
+                    Console.WriteLine("new level: "+levels[index]);
+                    user.ReadingLevel = levels[index];                
+                }
+
+                await _container.ReplaceItemAsync(user, userId, new PartitionKey(userId));
+
+                return Ok(new { message = "Feedback saved successfully!" });
+
+            }
+            catch (CosmosException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
+        }
+
 
     }
 }
+
+public class SaveScoreRequest{
+        public string UserId {get; set; }
+        public int Score {get; set; }
+    }

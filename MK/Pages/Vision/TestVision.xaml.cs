@@ -35,11 +35,6 @@ public partial class TestVision : ContentPage
 				showSelect.Source = imageSource; // Set the ImageSource for the image control
 				boundingBoxes = await _apiService.getBoxes();
 
-				Debug.WriteLine($"Bounding boxes count: {boundingBoxes.Count}");
-				foreach (var box in boundingBoxes)
-				{
-					Debug.WriteLine($"Label: {box.Label}, Left: {box.Left}, Top: {box.Top}, Width: {box.Width}, Height: {box.Height}");
-				}
 			}
 			else
 			{
@@ -60,11 +55,8 @@ public partial class TestVision : ContentPage
 		if(boundingBoxes[0]!=null){
 			 originalWidth = boundingBoxes[0].ImageWidth;
 			 originalHeight = boundingBoxes[0].ImageHeight;
-			 scale = ((showSelect.Height)/(originalHeight));
-			 Debug.WriteLine("scale: "+ scale);
+			 scale = showSelect.Height/originalHeight;
 		}
-		Debug.WriteLine("x: "+ rawX +"y: "+rawY);
-
 		string hi = null;
 
 		double pastDist = 1000000000;

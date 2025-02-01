@@ -284,7 +284,6 @@ public class ApiService
 
     public async Task<Tuple<string,string>> GetSpeechInfo ()
     {
-        Debug.WriteLine("getting speech info");
         var response  = await _httpClient.GetAsync($"api/SpeechAssess/info");
         var content = "error";
         Tuple<string,string> speechInfo = new Tuple<string, string>("error","error");
@@ -294,7 +293,6 @@ public class ApiService
             var jsonResponse = Newtonsoft.Json.JsonConvert.DeserializeObject<dynamic>(content);
             string speechKey = jsonResponse.key;
             string speechRegion = jsonResponse.region;
-            Debug.WriteLine("here and speecehkey is" + speechKey);
             speechInfo = new Tuple<string, string>(speechKey,speechRegion);
         }
         else{
@@ -420,13 +418,19 @@ public class ApiService
 
     }
 
-
-    //class used to map the JSON response
-    public class SpeechInfo
-        {
-            public string SpeechKey { get; set; }
-            public string SpeechRegion { get; set; }
+    public async Task<bool> addNewScore (string userId, int score)
+    {
+        Debug.WriteLine("ok so aleast i make it to addnewscore "+score);
+        try{
+            var response = await _httpClient.PostAsJsonAsync($"api/immersivereader/saveScore", new { UserId = userId, Score = score });
+            return response.IsSuccessStatusCode;
         }
+        catch (Exception ex){
+            return false;
+        }
+
+    }
+
 
 }
 

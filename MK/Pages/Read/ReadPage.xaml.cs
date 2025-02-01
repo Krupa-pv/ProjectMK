@@ -224,6 +224,50 @@ public partial class ReadPage : ContentPage
     private async void OnSubmit(object sender, EventArgs e){
 
 
+        RadioButton[] allAnswers = {Answer1, Answer2, Answer3, Answer4, Answer5, Answer6, Answer7, Answer8, Answer9, Answer10, Answer11, Answer12, Answer13, Answer14, Answer15, Answer16, Answer17, Answer18, Answer19, Answer20};
+        int score = 0;
+        for(int i = 0; i<5; i++){
+
+            if(allAnswers[4*i+correct[i]].IsChecked){
+                Debug.WriteLine("Correct!");
+                Debug.WriteLine(allAnswers[4*i+correct[i]].Content);
+                score++;
+            }
+            else{
+                Debug.WriteLine("you should have marked: ");
+                Debug.WriteLine(allAnswers[4*1+correct[i]].Content);
+            }
+
+        }
+        if(score==5){
+            await DisplayAlert("Perfect", "You got " + score + " out of 5 correct!", "OK");
+        }
+        else if(score==4){
+            await DisplayAlert("Good job!", "You got " + score + " out of 5 correct!", "OK");
+        }
+        else if(score==3){
+            await DisplayAlert("Good attempt!", "You got " + score + " out of 5 correct.", "OK");
+        }
+        else{
+            await DisplayAlert("Keep practicing!", "You got " + score + " out of 5 correct.", "OK");
+        }
+        StackLayout[] allQuestions = {Question1, Question2, Question3, Question4, Question5};
+        for(int i = 0; i < 5; i++){
+            allQuestions[i].IsVisible = !allQuestions[i].IsVisible;
+        }
+
+        
+        try
+        {
+            var userId = Preferences.Get("UserId", string.Empty);
+            _apiService.addNewScore(userId, score);
+
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlert("Error saving your score", ex.Message, "OK");
+        }
+
 
     }
 
